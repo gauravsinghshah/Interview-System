@@ -1,15 +1,21 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import Login from './components/login'
+import "./App.css";
+import Cards from "./components/Cards";
+import Student from "./components/Student";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <Login />
-  )
+    <div className="h-screen">
+      {/* <Student /> */}
+      <Cards
+        role="Software"
+        status="new"
+        companyName="Amazon"
+        detail="Remote"
+        salaryMin={145}
+        salaryMax={200}
+      />
+    </div>
+  );
 }
 
-export default App
+export default App;
