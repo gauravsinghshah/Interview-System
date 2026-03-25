@@ -59,44 +59,14 @@ const Student = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-zinc-950 -12">
-      <Navbar />
-
-      <main className="mx-auto max-w-7xl px-6 py-8">
+    <div className="min-h-screen bg-[#010409]">
+      <main className="mx-auto mt-10 max-w-7xl px-6 py-8">
         {/* First Heading Section */}
-        <div className="mb-12">
-          <h1 className="mb-2 text-3xl font-bold tracking-tight text-white md:text-4xl">
+        <div className="mb-3">
+          <h1 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
             Welcome back, <span className="text-indigo-500">Alex</span>
             <span className="animate-pulse">_</span>
           </h1>
-
-          <div className="mt-4 flex flex-wrap items-center gap-6 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 backdrop-blur-sm">
-            <div className="flex flex-col gap-1">
-              <span className="text-sm font-medium text-zinc-400">
-                Technical Readiness
-              </span>
-              <span className="text-2xl font-bold text-white">84%</span>
-            </div>
-            <div className="hidden h-10 w-px bg-zinc-800 sm:block"></div>
-            <div className="flex flex-col gap-1">
-              <span className="text-sm font-medium text-zinc-400">
-                Profile Status
-              </span>
-              <span className="flex items-center gap-2 text-sm font-semibold text-emerald-400">
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
-                </span>
-                Active & Visible
-              </span>
-            </div>
-
-            <div className="ml-auto">
-              <span className="rounded-full border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-sm text-zinc-500">
-                2 Companies waiting for response
-              </span>
-            </div>
-          </div>
         </div>
 
         {/* Interviews Section */}
