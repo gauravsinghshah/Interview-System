@@ -2,9 +2,9 @@ import React from "react";
 
 const About = () => {
   return (
-    <div className="flex h-full w-full items-center justify-between bg-[#f0ebe3] px-20 text-black">
-      <div className="flex flex-col text-[65px] leading-none font-extrabold uppercase">
-        <span className="mt-20">Don't Be</span>
+    <div className="flex min-h-screen w-full flex-col gap-10 bg-[#f0ebe3] px-6 py-16 text-black md:px-10 lg:flex-row lg:items-center lg:justify-between lg:px-20">
+      <div className="flex max-w-2xl flex-col text-[42px] leading-none font-extrabold uppercase md:text-[65px] mb-10">
+        <span className="mt-2">Don't Be</span>
         <span>
           Behind<span className="text-5xl">.</span>
         </span>
@@ -24,7 +24,7 @@ const About = () => {
           is paying $10K/hour consultants for.
         </span>
       </div>
-      <div className="mt-16 grid h-120 w-150 grid-cols-2 grid-rows-2 border border-gray-300">
+      <div className=" mb-20 grid h-120 w-full max-w-152 grid-cols-2 grid-rows-2 border border-gray-300 lg:mt-16">
         <div className="flex flex-col justify-center border-r border-b border-gray-300 p-8 hover:bg-black hover:text-white">
           <span className="text-7xl font-bold">50+</span>
           <span className="mt-4 text-xs font-semibold tracking-widest text-gray-400 uppercase">

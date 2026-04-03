@@ -2,14 +2,8 @@ import React from "react";
 
 const Hero = () => {
   return (
-    <div className="mt-4 flex h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#010409] font-sans text-white select-none selection:bg-blue-500 selection:text-white">
-      <div className="absolute top-18 left-12 z-20 flex items-center gap-4">
-        <div className="h-[2px] w-10 bg-blue-600 md:w-14"></div>
-        <p className="font-mono text-xs font-bold tracking-[0.18em] text-[#f1ede6] uppercase md:text-lg">
-          29-30 APRIL, 2026 / VIRTUAL
-        </p>
-      </div>
-      <div className="relative z-10 flex -translate-y-6 flex-col items-center justify-center leading-[0.85] md:-translate-y-12">
+    <div className="bg-pbg flex min-h-screen w-full flex-col items-center justify-center overflow-hidden font-sans text-white select-none selection:bg-blue-500 selection:text-white">
+      <div className="relative z-10 flex -translate-y-6 flex-col items-center justify-center leading-[0.85] max-md:scale-150 max-sm:scale-180 md:-translate-y-12">
         <h1 className="m-0 cursor-default p-0 text-[15vw] font-black tracking-tighter text-[#e8e4dc] transition-transform duration-700 ease-out hover:scale-105 md:text-[18vw]">
           INTER
         </h1>
@@ -19,15 +13,15 @@ const Hero = () => {
       </div>
       <div className="absolute bottom-10 z-20 flex max-w-sm flex-col gap-2 md:max-w-3xl">
         <div className="flex flex-wrap items-center gap-2 font-mono text-xs text-gray-400 md:text-lg">
-          <span className="bg-blue-600 px-1 py-0.5 font-bold text-white md:px-2 md:py-1">
+          <span className="bg-pb px-1 py-0.5 font-bold text-white max-md:text-xs max-sm:text-[10px] md:px-2 md:py-1">
             60% OF ALL HIRES
           </span>
           <span>will be AI-assisted by end of year.</span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 font-mono text-xs text-gray-400 md:text-lg">
+        <div className="flex flex-wrap items-center gap-2 font-mono text-xs text-gray-400 max-md:text-xs max-sm:text-[10px] md:text-lg">
           <span>Manual screening isn't a trend —</span>
-          <span className="bg-blue-600 px-1 py-0.5 font-bold text-white md:px-2 md:py-1">
+          <span className="bg-pb px-1 py-0.5 font-bold text-white md:px-2 md:py-1">
             it's the new standard.
           </span>
         </div>

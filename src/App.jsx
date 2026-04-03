@@ -9,11 +9,11 @@ import Student from "./components/Student";
 
 function App() {
   return (
-    <div className="h-screen bg-[#010409]">
+    <div className="min-h-screen w-full overflow-x-hidden bg-[#010409]">
       <Navbar />
       <Hero />
       <About />
-      {/* <Student /> */}
+      <Student />
       {/* <Recruiter /> */}
     </div>
   );

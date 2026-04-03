@@ -18,7 +18,7 @@ const Card = ({
   const badgeStyle = statusColors[status] || statusColors.default;
 
   return (
-    <div className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50 p-5 transition-all duration-300 hover:border-zinc-700 hover:bg-zinc-900 hover:shadow-lg hover:shadow-indigo-500/10">
+    <div className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50 p-5 transition-all duration-300 hover:scale-110 hover:border-zinc-700 hover:bg-zinc-900 hover:shadow-lg hover:shadow-indigo-500/10">
       <div className="mb-4 flex items-start justify-between">
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-800 font-bold text-white shadow-inner ring-1 ring-white/5">
           {companyName.charAt(0)}
@@ -31,7 +31,7 @@ const Card = ({
       </div>
 
       <div className="mb-4">
-        <h3 className="line-clamp-1 text-lg font-semibold text-white transition-colors group-hover:text-indigo-400">
+        <h3 className="line-clamp-1 text-lg font-semibold text-white transition-colors group-hover:text-emerald-500">
           {role}
         </h3>
         <div className="mt-1 flex items-center gap-2 text-sm text-zinc-400">

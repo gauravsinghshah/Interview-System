@@ -4,6 +4,9 @@ import Card from "./Cards";
 import Navbar from "./Navbar";
 import { ArrowRight, Sparkles } from "lucide-react";
 
+const [set, notset] = "";
+
+
 const Student = () => {
   const invitations = [
     {
@@ -64,7 +67,7 @@ const Student = () => {
         {/* First Heading Section */}
         <div className="mb-3">
           <h1 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
-            Welcome back, <span className="text-indigo-500">Alex</span>
+            Welcome back, <span className="text-pb">Alex</span>
             <span className="animate-pulse">_</span>
           </h1>
         </div>
@@ -82,7 +85,7 @@ const Student = () => {
             </div>
             <a
               href="#"
-              className="flex items-center gap-1 text-sm font-semibold text-indigo-400 transition-colors hover:text-indigo-300"
+              className="text-pb hover:text-pb flex items-center gap-1 text-sm font-semibold transition-colors"
             >
               View all <ArrowRight size={14} />
             </a>
