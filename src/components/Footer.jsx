@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaInstagram, FaGithub, FaTwitter, FaLinkedinIn } from "react-icons/fa";
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
   return (
-    <footer className="relative overflow-hidden border-t border-white/10 bg-[#f0ebe3] pt-16 pb-8 text-black">
-      {/* Subtle Background Glow */}
+    <div className="relative overflow-hidden border-t border-white/10 bg-[#f0ebe3] pt-16 pb-8 text-black">
       <div className="pointer-events-none absolute top-0 h-[150px] w-full"></div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
@@ -55,7 +55,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className="mb-6 text-lg font-semibold text-black-100">
+            <h3 className="text-black-100 mb-6 text-lg font-semibold">
               Product
             </h3>
             <ul className="space-y-4">
@@ -95,7 +95,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className="mb-6 text-lg font-semibold text-black-100">
+            <h3 className="text-black-100 mb-6 text-lg font-semibold">
               Company
             </h3>
             <ul className="space-y-4">
@@ -143,12 +143,20 @@ const Footer = () => {
             </p>
             <form
               className="flex flex-col gap-3"
-              onSubmit={(e) => e.preventDefault()}
+              onSubmit={(e) => {
+                e.preventDefault();
+                console.log(email);
+                setEmail("");
+              }}
             >
               <input
                 type="email"
                 placeholder="Enter your email"
                 className="w-full rounded-lg border border-black/10 bg-black/5 px-4 py-3 text-black placeholder-zinc-500 transition-all focus:border-transparent focus:ring-2 focus:ring-blue-500/50 focus:outline-none"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
               />
               <button
                 type="submit"
@@ -160,7 +168,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Bottom Bar */}
         <div className="flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 md:flex-row">
           <p className="text-sm text-zinc-500">
             © {new Date().getFullYear()} InterviewAI. All rights reserved.
@@ -178,7 +185,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
+    </div>
   );
 };
 
