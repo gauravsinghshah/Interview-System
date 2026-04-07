@@ -11,7 +11,7 @@ const Footer = () => {
         <div className="mb-16 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {/* Brand Section */}
           <div className="col-span-1 md:col-span-2 lg:col-span-1">
-            <h2 className="mb-6 bg-clip-text text-3xl font-bold text-transparent text-white font-mono uppercase ">
+            <h2 className="mb-6 bg-clip-text font-mono text-3xl font-bold text-transparent text-white uppercase">
               Interview
             </h2>
             <p className="mb-8 max-w-sm leading-relaxed text-zinc-400">
@@ -19,56 +19,121 @@ const Footer = () => {
               analyze, and master your interview skills in real-time.
             </p>
             <div className="flex gap-4">
-              <SocialIcon
+              <a
                 href="https://twitter.com"
-                Icon={FaTwitter}
-                hoverColor="hover:text-sky-400 hover:border-sky-400/50 hover:bg-sky-400/10"
-              />
-              <SocialIcon
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-white/10 bg-white/5 p-3 text-zinc-400 transition-all duration-300 hover:-translate-y-1 hover:border-sky-400/50 hover:bg-sky-400/10 hover:text-sky-400"
+              >
+                <FaTwitter className="text-lg" />
+              </a>
+              <a
                 href="https://github.com"
-                Icon={FaGithub}
-                hoverColor="hover:text-white hover:border-white/50 hover:bg-white/10"
-              />
-              <SocialIcon
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-white/10 bg-white/5 p-3 text-zinc-400 transition-all duration-300 hover:-translate-y-1 hover:border-white/50 hover:bg-white/10 hover:text-white"
+              >
+                <FaGithub className="text-lg" />
+              </a>
+              <a
                 href="https://linkedin.com"
-                Icon={FaLinkedinIn}
-                hoverColor="hover:text-blue-500 hover:border-blue-500/50 hover:bg-blue-500/10"
-              />
-              <SocialIcon
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-white/10 bg-white/5 p-3 text-zinc-400 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/50 hover:bg-blue-500/10 hover:text-blue-500"
+              >
+                <FaLinkedinIn className="text-lg" />
+              </a>
+              <a
                 href="https://instagram.com"
-                Icon={FaInstagram}
-                hoverColor="hover:text-pink-500 hover:border-pink-500/50 hover:bg-pink-500/10"
-              />
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-white/10 bg-white/5 p-3 text-zinc-400 transition-all duration-300 hover:-translate-y-1 hover:border-pink-500/50 hover:bg-pink-500/10 hover:text-pink-500"
+              >
+                <FaInstagram className="text-lg" />
+              </a>
             </div>
           </div>
 
-          {/* Quick Links */}
           <div>
             <h3 className="mb-6 text-lg font-semibold text-zinc-100">
               Product
             </h3>
             <ul className="space-y-4">
-              <FooterLink href="#features">Features</FooterLink>
-              <FooterLink href="#pricing">Pricing</FooterLink>
-              <FooterLink href="#changelog">Changelog</FooterLink>
-              <FooterLink href="#docs">Documentation</FooterLink>
+              <li>
+                <a
+                  href="#features"
+                  className="text-zinc-400 transition-colors duration-300 hover:text-blue-400"
+                >
+                  Features
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#pricing"
+                  className="text-zinc-400 transition-colors duration-300 hover:text-blue-400"
+                >
+                  Pricing
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#changelog"
+                  className="text-zinc-400 transition-colors duration-300 hover:text-blue-400"
+                >
+                  Changelog
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#docs"
+                  className="text-zinc-400 transition-colors duration-300 hover:text-blue-400"
+                >
+                  Documentation
+                </a>
+              </li>
             </ul>
           </div>
 
-          {/* Company */}
           <div>
             <h3 className="mb-6 text-lg font-semibold text-zinc-100">
               Company
             </h3>
             <ul className="space-y-4">
-              <FooterLink href="#about">About Us</FooterLink>
-              <FooterLink href="#contact">Contact</FooterLink>
-              <FooterLink href="#privacy">Privacy Policy</FooterLink>
-              <FooterLink href="#terms">Terms of Service</FooterLink>
+              <li>
+                <a
+                  href="#about"
+                  className="text-zinc-400 transition-colors duration-300 hover:text-blue-400"
+                >
+                  About Us
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#contact"
+                  className="text-zinc-400 transition-colors duration-300 hover:text-blue-400"
+                >
+                  Contact
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#privacy"
+                  className="text-zinc-400 transition-colors duration-300 hover:text-blue-400"
+                >
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#terms"
+                  className="text-zinc-400 transition-colors duration-300 hover:text-blue-400"
+                >
+                  Terms of Service
+                </a>
+              </li>
             </ul>
           </div>
 
-          {/* Newsletter */}
           <div>
             <h3 className="mb-6 text-lg font-semibold text-zinc-100">
               Stay Updated
@@ -87,7 +152,7 @@ const Footer = () => {
               />
               <button
                 type="submit"
-                className="w-full rounded-lg bg-white px-4 py-3 font-semibold text-black transition-colors duration-300 hover:bg-zinc-200"
+                className="w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition-colors duration-300 hover:scale-105 hover:bg-blue-700"
               >
                 Subscribe
               </button>
@@ -116,28 +181,5 @@ const Footer = () => {
     </footer>
   );
 };
-
-const FooterLink = ({ href, children }) => (
-  <li>
-    <a
-      href={href}
-      className="group flex items-center gap-2 text-zinc-400 transition-colors duration-300 hover:text-blue-400"
-    >
-      <span className="h-px w-0 bg-blue-400 transition-all duration-300 group-hover:w-3"></span>
-      {children}
-    </a>
-  </li>
-);
-
-const SocialIcon = ({ href, Icon, hoverColor }) => (
-  <a
-    href={href}
-    target="_blank"
-    rel="noopener noreferrer"
-    className={`rounded-full border border-white/10 bg-white/5 p-3 text-zinc-400 transition-all duration-300 hover:-translate-y-1 ${hoverColor}`}
-  >
-    <Icon className="text-lg" />
-  </a>
-);
 
 export default Footer;

@@ -4,7 +4,7 @@ import { FaGithub } from "react-icons/fa";
 const teamMembers = [
   {
     username: "Graphical27",
-    name: "Graphical 27",
+    name: "Sourabh Singh",
     role: "Full Stack Developer",
     company: "GitHub",
     color: "text-blue-600",
@@ -25,7 +25,7 @@ const teamMembers = [
   },
   {
     username: "NAMAN3342",
-    name: "Naman",
+    name: "Naman Joshi",
     role: "Software Engineer",
     company: "GitHub",
     color: "text-blue-600",
