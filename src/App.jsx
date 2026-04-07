@@ -1,3 +1,4 @@
+import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 import About from "./components/About";
 import Box from "./components/Box";
@@ -9,18 +10,57 @@ import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
 import Recruiter from "./components/Recruiter";
 import Student from "./components/Student";
+import Login from "./components/login";
 
-function App() {
+const ProtectedRoute = ({ children, allowedRole }) => {
+  const userName = localStorage.getItem("userName");
+  const userRole = localStorage.getItem("userRole");
+
+  if (!userName || !userRole) {
+    return <Navigate to="/login" replace />;
+  }
+  if (allowedRole && userRole !== allowedRole) {
+    return <Navigate to={`/${userRole}`} replace />;
+  }
+  return children;
+};
+
+function Home() {
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-[#010409]">
+    <>
       <Navbar />
       <Hero />
       <About />
       <Builder />
-      <CallToAction /> 
-      <Student />
-      <Recruiter />
+      <CallToAction />
       <Footer />
+    </>
+  );
+}
+
+function App() {
+  return (
+    <div className="min-h-screen w-full overflow-x-hidden bg-[#010409]">
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/student"
+          element={
+            <ProtectedRoute allowedRole="student">
+              <Student />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/recruiter"
+          element={
+            <ProtectedRoute allowedRole="recruiter">
+              <Recruiter />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
     </div>
   );
 }

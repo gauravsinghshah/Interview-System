@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const CallToAction = () => {
   return (
@@ -12,12 +13,13 @@ const CallToAction = () => {
         <span>No More Anxiety</span>
         <span className="hidden sm:inline">·</span>
         <span>AI-assisted evaluation</span>
-        
       </div>
 
-      <button className="flex items-center justify-center gap-4 border-2 border-transparent bg-[#f2efe9] px-8 py-4 text-sm font-bold tracking-[0.2em] text-black uppercase  duration-300 hover:scale-105 hover:bg-black hover:text-white md:text-base">
-        get started <span className="text-xl leading-none">&rarr;</span>
-      </button>
+      <Link to="/login">
+        <button className="flex cursor-pointer items-center justify-center gap-4 border-2 border-transparent bg-[#f2efe9] px-8 py-4 text-sm font-bold tracking-[0.2em] text-black uppercase duration-300 hover:scale-105 hover:bg-black hover:text-white md:text-base">
+          get started <span className="text-xl leading-none">&rarr;</span>
+        </button>
+      </Link>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { Building2, MapPin, DollarSign, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const Card = ({
   companyName = "Company",
@@ -9,45 +9,43 @@ const Card = ({
   role = "Role",
 }) => {
   return (
-    <div className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50 p-5 transition-all duration-300 hover:scale-110 hover:border-zinc-700 hover:bg-zinc-900 hover:shadow-lg hover:shadow-indigo-500/10">
+    <div className="flex flex-col border-2 border-black bg-white p-6 transition-all hover:translate-x-1 hover:translate-y-1">
       <div className="mb-4 flex items-start justify-between">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-800 font-bold text-white shadow-inner ring-1 ring-white/5">
-          {companyName.charAt(0)}
+        <div className="text-2xl font-black text-black uppercase">
+          {companyName}
         </div>
+        <span
+          className={`border border-black px-2 py-1 font-mono text-xs font-bold uppercase ${
+            status === "New"
+              ? "bg-[#1800ff] text-white"
+              : status === "Priority"
+                ? "bg-red-500 text-white"
+                : "bg-green-400 text-black"
+          }`}
+        >
+          {status}
+        </span>
       </div>
-
-      <div className="mb-4">
-        <h3 className="line-clamp-1 text-lg font-semibold text-white transition-colors group-hover:text-emerald-500">
-          {role}
-        </h3>
-        <div className="mt-1 flex items-center gap-2 text-sm text-zinc-400">
-          <span className="flex items-center gap-1">
-            <Building2 size={14} />
-            {companyName}
-          </span>
-          <span className="text-zinc-600">•</span>
-          <span className="flex items-center gap-1">
-            <MapPin size={14} />
-            {detail}
-          </span>
-        </div>
+      <h3 className="mb-2 text-xl leading-tight font-extrabold uppercase">
+        {role}
+      </h3>
+      <div className="mb-6 font-mono text-sm font-semibold text-gray-600 uppercase">
+        {detail}
       </div>
-
-      <div className="mt-auto flex items-end justify-between border-t border-zinc-800 pt-4">
-        <div>
-          <p className="text-xs font-semibold tracking-wider text-zinc-500 uppercase">
-            Salary Range
-          </p>
-          <div className="flex items-center gap-1 font-medium text-zinc-200">
-            <DollarSign size={14} className="text-emerald-500" />
-            <span>
-              ${salaryMin}k - ${salaryMax}k
-            </span>
-          </div>
+      <div className="mt-auto flex items-center justify-between border-t-2 border-black pt-4">
+        <div className="flex flex-col">
+          <span className="text-[10px] font-bold tracking-widest uppercase">
+            Comp Range
+          </span>
+          <span className="text-lg font-black">
+            ${salaryMin}k - ${salaryMax}k
+          </span>
         </div>
-
-        <button className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-800 text-zinc-400 transition-colors duration-300 group-hover:translate-x-1 hover:bg-indigo-600 hover:text-white">
-          <ArrowRight size={16} />
+        <button className="group border border-black bg-black p-2 text-white transition-colors hover:bg-[#1800ff]">
+          <ArrowRight
+            size={20}
+            className="transition-transform group-hover:translate-x-1"
+          />
         </button>
       </div>
     </div>

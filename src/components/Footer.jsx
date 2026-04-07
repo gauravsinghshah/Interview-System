@@ -5,7 +5,7 @@ const Footer = () => {
   const [email, setEmail] = useState("");
   return (
     <div className="relative overflow-hidden border-t border-white/10 bg-[#f0ebe3] pt-16 pb-8 text-black">
-      <div className="pointer-events-none absolute top-0 h-[150px] w-full"></div>
+      <div className="pointer-events-none absolute top-0 h-[150] w-full"></div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mb-16 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
@@ -22,10 +23,11 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <button className="cursor-pointer bg-blue-600 px-4 py-2 text-[10px] font-bold tracking-widest text-white uppercase transition-colors hover:bg-blue-700 md:px-6 md:py-3 md:text-xs">
-            GET STARTED
-          </button>
-
+          <Link to="/login">
+            <button className="cursor-pointer bg-blue-600 px-4 py-2 text-[10px] font-bold tracking-widest text-white uppercase transition-colors hover:bg-blue-700 md:px-6 md:py-3 md:text-xs">
+              GET STARTED
+            </button>
+          </Link>
         </div>
       </div>
     </div>

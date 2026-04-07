@@ -1,21 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Plus, ArrowRight, Briefcase } from "lucide-react";
-
-const mockJobs = [
-  {
-    id: 1,
-    title: "Senior Frontend Engineer",
-    candidates: 45,
-    status: "Active",
-  },
-  {
-    id: 2,
-    title: "Backend Systems Architect",
-    candidates: 12,
-    status: "Active",
-  },
-  { id: 3, title: "Product Designer", candidates: 89, status: "Closed" },
-];
 
 const mockCandidates = [
   {
@@ -62,24 +46,200 @@ const mockCandidates = [
 
 const Recruiter = () => {
   const [activeJob, setActiveJob] = useState("Senior Frontend Engineer");
+  const [userName, setUserName] = useState("Recruiter");
+  const [isPostingModalOpen, setIsPostingModalOpen] = useState(false);
+  const [newJobData, setNewJobData] = useState({
+    role: "",
+    companyName: "",
+    detail: "",
+    salaryMin: "",
+    salaryMax: "",
+  });
+
+  const [jobs, setJobs] = useState([]);
+
+  useEffect(() => {
+    let name = "Recruiter";
+    const storedName = localStorage.getItem("userName");
+    if (storedName) {
+      name = storedName.split(" ")[0];
+      setUserName(name);
+    }
+
+    fetch(`http://localhost:5000/api/jobs?postedBy=${name}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setJobs(data);
+        if (data.length > 0 && activeJob === "Senior Frontend Engineer") {
+          setActiveJob(data[0].role);
+        }
+      })
+      .catch((err) => console.error("Error fetching jobs:", err));
+  }, []);
+
+  const handleJobSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:5000/api/jobs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...newJobData, postedBy: userName }),
+      });
+      if (response.ok) {
+        const newJob = await response.json();
+        setJobs([newJob, ...jobs]);
+        if (jobs.length === 0) setActiveJob(newJob.role);
+        alert("Job Posted Successfully!");
+        setIsPostingModalOpen(false);
+        setNewJobData({
+          role: "",
+          companyName: "",
+          detail: "",
+          salaryMin: "",
+          salaryMax: "",
+        });
+      } else {
+        alert("Failed to post job");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error connecting to server");
+    }
+  };
 
   const filteredCandidates = mockCandidates.filter((c) => c.role === activeJob);
 
   return (
-    <div className="min-h-screen w-full border-y-2 border-black bg-[#f2efe9] font-sans text-black">
+    <div className="relative min-h-screen w-full border-y-2 border-black bg-[#f2efe9] font-sans text-black">
+      {isPostingModalOpen && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-lg border-2 border-black bg-white p-8 ">
+            <h2 className="mb-6 text-3xl font-black uppercase">
+              Post a New Role
+            </h2>
+            <form onSubmit={handleJobSubmit} className="space-y-4 font-bold">
+              <div>
+                <label className="mb-1 block text-sm uppercase">
+                  Job Role / Title
+                </label>
+                <input
+                  required
+                  type="text"
+                  value={newJobData.role}
+                  onChange={(e) =>
+                    setNewJobData({ ...newJobData, role: e.target.value })
+                  }
+                  className="w-full border-2 border-black px-4 py-3 placeholder-gray-400  transition-all hover:translate-x-1 hover:translate-y-1"
+                  placeholder="E.g., Senior Developer"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm uppercase">
+                  Company Name
+                </label>
+                <input
+                  required
+                  type="text"
+                  value={newJobData.companyName}
+                  onChange={(e) =>
+                    setNewJobData({
+                      ...newJobData,
+                      companyName: e.target.value,
+                    })
+                  }
+                  className="w-full border-2 border-black px-4 py-3 placeholder-gray-400 transition-all hover:translate-x-1 hover:translate-y-1"
+                  placeholder="Company Inc."
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm uppercase">
+                  Location Details
+                </label>
+                <input
+                  required
+                  type="text"
+                  value={newJobData.detail}
+                  onChange={(e) =>
+                    setNewJobData({ ...newJobData, detail: e.target.value })
+                  }
+                  className="w-full border-2 border-black px-4 py-3 placeholder-gray-400 transition-all hover:translate-x-1 hover:translate-y-1"
+                  placeholder="Remote / New York"
+                />
+              </div>
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <label className="mb-1 block text-sm uppercase">
+                    Min Salary (k)
+                  </label>
+                  <input
+                    required
+                    type="number"
+                    value={newJobData.salaryMin}
+                    onChange={(e) =>
+                      setNewJobData({
+                        ...newJobData,
+                        salaryMin: e.target.value,
+                      })
+                    }
+                    className="w-full border-2 border-black px-4 py-3 placeholder-gray-400 transition-all hover:translate-x-1 hover:translate-y-1"
+                    placeholder="80"
+                  />
+                </div>
+                <div className="flex-1">
+                  <label className="mb-1 block text-sm uppercase">
+                    Max Salary (k)
+                  </label>
+                  <input
+                    required
+                    type="number"
+                    value={newJobData.salaryMax}
+                    onChange={(e) =>
+                      setNewJobData({
+                        ...newJobData,
+                        salaryMax: e.target.value,
+                      })
+                    }
+                    className="w-full border-2 border-black px-4 py-3 placeholder-gray-400 transition-all hover:translate-x-1 hover:translate-y-1"
+                    placeholder="150"
+                  />
+                </div>
+              </div>
+              <div className="mt-8 flex items-center justify-end gap-4 border-t-2 border-black pt-6">
+                <button
+                  type="button"
+                  onClick={() => setIsPostingModalOpen(false)}
+                  className="font-bold text-gray-500 uppercase hover:text-black"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="cursor-pointer border-2 border-black bg-[#1800ff] px-8 py-3 font-black text-white uppercase transition-all hover:translate-x-1 hover:translate-y-1 "
+                >
+                  Submit Role
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       <main className="mx-auto max-w-7xl px-6 py-16 md:py-24">
         <div className="mb-16 flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div>
             <h1 className="mb-4 text-5xl leading-none font-black tracking-tighter uppercase md:text-7xl">
-              Recruiter <br className="hidden md:block" />
-              <span className="text-[#1800ff]">Portal</span>
+              Welcome back, <br className="hidden md:block" />
+              <span className="text-[#1800ff]">{userName}</span>
               <span className="animate-pulse text-[#1800ff]">_</span>
             </h1>
             <p className="border-l-4 border-black pl-4 font-mono text-sm font-bold tracking-widest uppercase md:text-base">
               Manage Roles / Filter Candidates / Hire
             </p>
           </div>
-          <button className="flex items-center justify-center gap-2 border-2 border-black bg-[#1800ff] px-6 py-4 font-bold tracking-widest text-white uppercase hover:translate-x-1 hover:translate-y-1">
+          <button
+            onClick={() => setIsPostingModalOpen(true)}
+            className="flex cursor-pointer items-center justify-center gap-2 border-2 border-black bg-[#1800ff] px-6 py-4 font-bold tracking-widest text-white uppercase  transition-all hover:translate-x-1 hover:translate-y-1"
+          >
             <Plus size={20} />
             Post New Role
           </button>
@@ -91,43 +251,49 @@ const Recruiter = () => {
             Active Roles
           </h2>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {mockJobs.map((job) => (
-              <div
-                key={job.id}
-                onClick={() => setActiveJob(job.title)}
-                className={`cursor-pointer border-2 border-black p-6 transition-all ${
-                  activeJob === job.title
-                    ? "translate-x-1 translate-y-1 bg-black text-white"
-                    : "bg-white text-black hover:bg-gray-50"
-                }`}
-              >
-                <div className="mb-4 flex items-start justify-between">
-                  <Briefcase
-                    size={28}
-                    className={
-                      activeJob === job.title ? "text-[#1800ff]" : "text-black"
-                    }
-                  />
-                  <span
-                    className={`border px-2 py-1 font-mono text-xs font-bold uppercase ${
-                      activeJob === job.title
-                        ? "border-white/20 bg-white/10"
-                        : "border-black bg-[#1800ff] text-white"
-                    }`}
-                  >
-                    {job.status}
-                  </span>
-                </div>
-                <h3 className="mb-4 text-2xl leading-tight font-black uppercase">
-                  {job.title}
-                </h3>
+            {jobs.length === 0 ? (
+              <p className="col-span-full font-bold tracking-widest text-gray-500 uppercase">
+                No Active roles posted yet.
+              </p>
+            ) : (
+              jobs.map((job) => (
                 <div
-                  className={`font-mono text-sm font-bold tracking-widest uppercase ${activeJob === job.title ? "text-gray-300" : "text-gray-500"}`}
+                  key={job._id || job.id}
+                  onClick={() => setActiveJob(job.role)}
+                  className={`cursor-pointer border-2 border-black p-6 transition-all ${
+                    activeJob === job.role
+                      ? "translate-x-1 translate-y-1 bg-black text-white"
+                      : "bg-white text-black hover:bg-gray-50"
+                  }`}
                 >
-                  {job.candidates} Candidates
+                  <div className="mb-4 flex items-start justify-between">
+                    <Briefcase
+                      size={28}
+                      className={
+                        activeJob === job.role ? "text-[#1800ff]" : "text-black"
+                      }
+                    />
+                    <span
+                      className={`border px-2 py-1 font-mono text-xs font-bold uppercase ${
+                        activeJob === job.role
+                          ? "border-white/20 bg-white/10"
+                          : "border-black bg-[#1800ff] text-white"
+                      }`}
+                    >
+                      {job.status || "Active"}
+                    </span>
+                  </div>
+                  <h3 className="mb-4 text-2xl leading-tight font-black uppercase">
+                    {job.role}
+                  </h3>
+                  <div
+                    className={`font-mono text-sm font-bold tracking-widest uppercase ${activeJob === job.role ? "text-gray-300" : "text-gray-500"}`}
+                  >
+                    0 Candidates
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
 
@@ -143,12 +309,11 @@ const Recruiter = () => {
             </div>
           </div>
 
-          {/* Candidate Grid */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredCandidates.map((candidate) => (
               <div
                 key={candidate.id}
-                className="flex flex-col border-2 border-black bg-white p-6  transition-all hover:translate-x-1 hover:translate-y-1"
+                className="flex flex-col border-2 border-black bg-white p-6 transition-all hover:translate-x-1 hover:translate-y-1"
               >
                 <div className="mb-6 flex items-start justify-between">
                   <div>
@@ -160,7 +325,7 @@ const Recruiter = () => {
                     </p>
                   </div>
 
-                  <div className="flex min-w-[70px] flex-col items-center justify-center border-2 border-black bg-[#1800ff] p-2 text-white">
+                  <div className="flex min-w-70px flex-col items-center justify-center border-2 border-black bg-[#1800ff] p-2 text-white">
                     <span className="mb-1 font-mono text-[10px] font-bold tracking-widest uppercase">
                       AI Score
                     </span>
