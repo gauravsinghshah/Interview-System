@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar";
 import Recruiter from "./components/Recruiter";
 import Student from "./components/Student";
 
+
 function App() {
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-[#010409]">
@@ -15,8 +16,8 @@ function App() {
       <Hero />
       <About />
       <Student />
+      <Recruiter />
       <Footer />
-      {/* <Recruiter /> */}
     </div>
   );
 }
