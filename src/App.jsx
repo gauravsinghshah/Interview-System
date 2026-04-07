@@ -2,13 +2,13 @@ import "./App.css";
 import About from "./components/About";
 import Box from "./components/Box";
 import Builder from "./components/Builder";
+import CallToAction from "./components/CallToAction";
 import Cards from "./components/Cards";
 import Footer from "./components/Footer";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
 import Recruiter from "./components/Recruiter";
 import Student from "./components/Student";
-
 
 function App() {
   return (
@@ -17,6 +17,7 @@ function App() {
       <Hero />
       <About />
       <Builder />
+      <CallToAction />
       {/* <Student /> */}
       {/* <Recruiter /> */}
       <Footer />
