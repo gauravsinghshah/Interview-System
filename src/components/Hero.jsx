@@ -2,7 +2,7 @@ import React from "react";
 
 const Hero = () => {
   return (
-    <div className="bg-pbg flex min-h-screen w-full flex-col items-center justify-center overflow-hidden font-sans text-white select-none selection:bg-blue-500 selection:text-white">
+    <div className="relative bg-pbg flex min-h-screen w-full flex-col items-center justify-center overflow-hidden font-sans text-white select-none selection:bg-blue-500 selection:text-white">
       <div className="relative z-10 flex -translate-y-6 flex-col items-center justify-center leading-[0.85] max-md:scale-150 max-sm:scale-180 md:-translate-y-12">
         <h1 className="m-0 cursor-default p-0 text-[15vw] font-black tracking-tighter text-[#e8e4dc] transition-transform duration-700 hover:scale-105 md:text-[18vw]">
           INTER
@@ -25,9 +25,6 @@ const Hero = () => {
             it's the new standard.
           </span>
         </div>
-      </div>
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-        <div className="h-[40vw] w-[40vw] animate-pulse rounded-full bg-blue-900/10 blur-[100px]"></div>
       </div>
     </div>
   );

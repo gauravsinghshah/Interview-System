@@ -4,7 +4,6 @@ import { MoveRight, Sparkles } from "lucide-react";
 const Box = ({ plan, role, tags }) => {
   return (
     <div className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 transition-all duration-300 hover:border-zinc-700 hover:bg-zinc-900 hover:shadow-lg hover:shadow-indigo-500/10">
-      {/* Decorative gradient overlay on hover */}
       <div className="absolute inset-0 bg-linear-to-br from-indigo-500/5 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
 
       <div>

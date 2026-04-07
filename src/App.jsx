@@ -1,6 +1,7 @@
 import "./App.css";
 import About from "./components/About";
 import Box from "./components/Box";
+import Builder from "./components/Builder";
 import Cards from "./components/Cards";
 import Footer from "./components/Footer";
 import Hero from "./components/Hero";
@@ -15,8 +16,9 @@ function App() {
       <Navbar />
       <Hero />
       <About />
+      <Builder />
       <Student />
-      <Recruiter />
+      {/* <Recruiter /> */}
       <Footer />
     </div>
   );
