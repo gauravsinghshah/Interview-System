@@ -7,17 +7,17 @@ const Navbar = () => {
         <div className="cursor-pointer text-lg font-black tracking-[0.2em] text-white md:text-xl">
           INTERVIEW
         </div>
-        <div className="hidden items-center gap-8 text-sm font-bold tracking-widest text-gray-400 md:flex">
-          <a href="#" className="transition-colors hover:text-white">
+        <div className="hidden items-center gap-8 text-sm font-bold tracking-widest text-gray-400 md:flex uppercase">
+          <a href="#about" className="transition-colors hover:text-white">
             ABOUT
           </a>
-          <a href="#" className="transition-colors hover:text-white">
-            FEATURES
+          <a href="#dev" className="transition-colors hover:text-white">
+            Developers
           </a>
-          <a href="#" className="transition-colors hover:text-white">
-            PRICING
+          <a href="#updates" className="transition-colors hover:text-white">
+            Updates
           </a>
-          <a href="#" className="transition-colors hover:text-white">
+          <a href="#footer" className="transition-colors hover:text-white">
             FAQ
           </a>
         </div>

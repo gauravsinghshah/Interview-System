@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const CallToAction = () => {
   return (
-    <div className="flex w-full flex-col items-center justify-center border-b-2 border-black bg-[#1800ff] px-4 py-24 text-center text-white md:py-32">
+    <div id="updates" className="flex w-full flex-col items-center justify-center border-b-2 border-black bg-[#1800ff] px-4 py-24 text-center text-white md:py-32">
       <h1 className="mb-8 max-w-[90vw] text-5xl leading-[0.9] font-black tracking-tighter uppercase sm:text-7xl md:text-8xl lg:text-[7vw]">
         While you're stressing, <br className="hidden md:block" /> we just made
         interviews easy

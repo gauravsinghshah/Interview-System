@@ -4,7 +4,7 @@ import { FaInstagram, FaGithub, FaTwitter, FaLinkedinIn } from "react-icons/fa";
 const Footer = () => {
   const [email, setEmail] = useState("");
   return (
-    <div className="relative overflow-hidden border-t border-white/10 bg-[#f0ebe3] pt-16 pb-8 text-black">
+    <div id="footer" className="relative overflow-hidden border-t border-white/10 bg-[#f0ebe3] pt-16 pb-8 text-black">
       <div className="pointer-events-none absolute top-0 h-[150] w-full"></div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">

@@ -30,7 +30,7 @@ const teamMembers = [
 
 const Builder = () => {
   return (
-    <div className="min-h-screen w-full bg-[#f2efe9] text-black">
+    <div id="dev" className="min-h-screen w-full bg-[#f2efe9] text-black">
       <hr className="border-2 border-black" />
       <div className="mx-auto max-w-7xl px-6 py-16 md:px-18">
         <div className="mb-16 -ml-2 text-left md:-ml-28">
