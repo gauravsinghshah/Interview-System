@@ -13,8 +13,8 @@ import Student from "./components/Student";
 import Login from "./components/login";
 
 const ProtectedRoute = ({ children, allowedRole }) => {
-  const userName = localStorage.getItem("userName");
-  const userRole = localStorage.getItem("userRole");
+  const userName = sessionStorage.getItem("userName");
+  const userRole = sessionStorage.getItem("userRole");
 
   if (!userName || !userRole) {
     return <Navigate to="/login" replace />;

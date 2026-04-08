@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { User, Briefcase, Mail, Lock, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+const API_BASE_URL = "http://localhost:5000";
+
 const Login = () => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
@@ -12,6 +14,8 @@ const Login = () => {
     name: "",
   });
   const [errorMsg, setErrorMsg] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleInputChange = (e) => {
     setLoginData({
       ...loginData,
@@ -20,26 +24,53 @@ const Login = () => {
     setErrorMsg("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg("");
 
-    if (isLogin) {
-      if (loginData.email && loginData.password) {
-        localStorage.setItem("userName", loginData.email);
-        localStorage.setItem("userRole", role);
-        navigate(role === "student" ? "/student" : "/recruiter");
-      } else {
-        setErrorMsg("Please enter email and password");
+    if (
+      !loginData.email ||
+      !loginData.password ||
+      (!isLogin && !loginData.name)
+    ) {
+      setErrorMsg(
+        isLogin ? "Please enter email and password" : "Please fill all fields",
+      );
+      return;
+    }
+
+    const endpoint = isLogin ? "/api/auth/login" : "/api/auth/signup";
+    const payload = {
+      email: loginData.email,
+      password: loginData.password,
+      role,
+      ...(isLogin ? {} : { name: loginData.name }),
+    };
+
+    try {
+      setIsSubmitting(true);
+
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Authentication failed");
       }
-    } else {
-      if (loginData.email && loginData.password && loginData.name) {
-        localStorage.setItem("userName", loginData.name);
-        localStorage.setItem("userRole", role);
-        navigate(role === "student" ? "/student" : "/recruiter");
-      } else {
-        setErrorMsg("Please fill all fields");
-      }
+
+      sessionStorage.setItem("userName", data.name);
+      sessionStorage.setItem("userRole", data.role);
+      navigate(data.role === "student" ? "/student" : "/recruiter");
+    } catch (error) {
+      setErrorMsg(error.message || "Unable to sign in right now");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -54,7 +85,7 @@ const Login = () => {
         >
           ← Home
         </button>
-      </div>  
+      </div>
       <div className="relative z-10 w-full max-w-md border-2 border-black bg-white p-8 transition-transform duration-200">
         <div className="mb-8 border-2 border-black bg-[#b8ff22] py-4 text-center">
           <h2 className="mb-1 text-4xl font-black tracking-tight text-black uppercase">
@@ -157,9 +188,16 @@ const Login = () => {
 
           <button
             type="submit"
-            className="group mt-4 flex w-full cursor-pointer items-center justify-center gap-2 border-2 border-black bg-[#ff3366] py-4 font-black text-white uppercase transition-all duration-200"
+            disabled={isSubmitting}
+            className="group mt-4 flex w-full cursor-pointer items-center justify-center gap-2 border-2 border-black bg-[#ff3366] py-4 font-black text-white uppercase transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-70"
           >
-            <span>{isLogin ? "Sign In" : "Create Account"}</span>
+            <span>
+              {isSubmitting
+                ? "Please wait..."
+                : isLogin
+                  ? "Sign In"
+                  : "Create Account"}
+            </span>
             <ChevronRight
               size={20}
               className="transition-transform group-hover:translate-x-1"

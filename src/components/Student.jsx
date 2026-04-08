@@ -8,7 +8,7 @@ const Student = () => {
   const [userName, setUserName] = useState("Alex");
   const [invitations, setInvitations] = useState([]);
   useEffect(() => {
-    const storedName = localStorage.getItem("userName");
+    const storedName = sessionStorage.getItem("userName");
     if (storedName) {
       setUserName(storedName.split(" ")[0]);
     }

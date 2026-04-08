@@ -47,10 +47,10 @@ const Recruiter = () => {
     salaryMin: "",
     salaryMax: "",
   });
-  const [jobs, setJobs] = useState([])
+  const [jobs, setJobs] = useState([]);
   useEffect(() => {
     let name = "Recruiter";
-    const storedName = localStorage.getItem("userName");
+    const storedName = sessionStorage.getItem("userName");
     if (storedName) {
       name = storedName.split(" ")[0];
       setUserName(name);
@@ -100,7 +100,7 @@ const Recruiter = () => {
     <div className="relative min-h-screen w-full border-y-2 border-black bg-[#f2efe9] font-sans text-black">
       {isPostingModalOpen && (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-lg border-2 border-black bg-white p-8 ">
+          <div className="w-full max-w-lg border-2 border-black bg-white p-8">
             <h2 className="mb-6 text-3xl font-black uppercase">
               Post a New Role
             </h2>
@@ -116,7 +116,7 @@ const Recruiter = () => {
                   onChange={(e) =>
                     setNewJobData({ ...newJobData, role: e.target.value })
                   }
-                  className="w-full border-2 border-black px-4 py-3 placeholder-gray-400  transition-all hover:translate-x-1 hover:translate-y-1"
+                  className="w-full border-2 border-black px-4 py-3 placeholder-gray-400 transition-all hover:translate-x-1 hover:translate-y-1"
                   placeholder="E.g., Senior Developer"
                 />
               </div>
@@ -201,7 +201,7 @@ const Recruiter = () => {
                 </button>
                 <button
                   type="submit"
-                  className="cursor-pointer border-2 border-black bg-[#1800ff] px-8 py-3 font-black text-white uppercase transition-all hover:translate-x-1 hover:translate-y-1 "
+                  className="cursor-pointer border-2 border-black bg-[#1800ff] px-8 py-3 font-black text-white uppercase transition-all hover:translate-x-1 hover:translate-y-1"
                 >
                   Submit Role
                 </button>
@@ -225,7 +225,7 @@ const Recruiter = () => {
           </div>
           <button
             onClick={() => setIsPostingModalOpen(true)}
-            className="flex cursor-pointer items-center justify-center gap-2 border-2 border-black bg-[#1800ff] px-6 py-4 font-bold tracking-widest text-white uppercase  transition-all hover:translate-x-1 hover:translate-y-1"
+            className="flex cursor-pointer items-center justify-center gap-2 border-2 border-black bg-[#1800ff] px-6 py-4 font-bold tracking-widest text-white uppercase transition-all hover:translate-x-1 hover:translate-y-1"
           >
             <Plus size={20} />
             Post New Role
@@ -312,7 +312,7 @@ const Recruiter = () => {
                     </p>
                   </div>
 
-                  <div className="flex min-w-70px flex-col items-center justify-center border-2 border-black bg-[#1800ff] p-2 text-white">
+                  <div className="min-w-70px flex flex-col items-center justify-center border-2 border-black bg-[#1800ff] p-2 text-white">
                     <span className="mb-1 font-mono text-[10px] font-bold tracking-widest uppercase">
                       AI Score
                     </span>
