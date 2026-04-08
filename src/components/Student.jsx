@@ -6,9 +6,7 @@ import Navbar from "./Navbar";
 
 const Student = () => {
   const [userName, setUserName] = useState("Alex");
-
   const [invitations, setInvitations] = useState([]);
-
   useEffect(() => {
     const storedName = localStorage.getItem("userName");
     if (storedName) {

@@ -6,29 +6,25 @@ const teamMembers = [
     username: "Graphical27",
     name: "Sourabh Singh",
     role: "Full Stack Developer",
-    company: "GitHub",
-    color: "text-blue-600",
+    company: "GitHub"
   },
   {
     username: "gauravsinghshah",
     name: "Gaurav Singh Shah",
     role: "Frontend Engineer",
-    company: "GitHub",
-    color: "text-blue-600",
+    company: "GitHub"
   },
   {
     username: "ShahilChand",
     name: "Shahil Chand",
     role: "Backend Architect",
-    company: "GitHub",
-    color: "text-blue-600",
+    company: "GitHub"
   },
   {
     username: "NAMAN3342",
     name: "Naman Joshi",
     role: "Software Engineer",
-    company: "GitHub",
-    color: "text-blue-600",
+    company: "GitHub"
   },
 ];
 
@@ -46,16 +42,14 @@ const Builder = () => {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 justify-items-center gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
-          {teamMembers.map((member, idx) => (
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
+          {teamMembers.map((member) => (
             <div
-              key={idx}
               className="flex cursor-pointer flex-col items-center text-center"
             >
               <div className="mb-6 h-56 w-56 overflow-hidden rounded-full border border-black md:h-60 md:w-60">
                 <img
                   src={`https://github.com/${member.username}.png?size=400`}
-                  alt={member.name}
                   className="h-full w-full grayscale transition-all duration-500 ease-in-out hover:scale-105 hover:grayscale-0"
                 />
               </div>
@@ -63,7 +57,7 @@ const Builder = () => {
               <p className="mb-1 font-mono text-sm text-gray-600">
                 {member.role}
               </p>
-              <p className={`text-lg font-bold ${member.color} mb-3`}>
+              <p className={`text-lg font-bold text-blue-600 mb-3`}>
                 {member.company}
               </p>
               <a

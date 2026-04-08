@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  User,
-  Briefcase,
-  Mail,
-  Lock,
-  CheckCircle2,
-  ChevronRight,
-} from "lucide-react";
+import { User, Briefcase, Mail, Lock, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -19,8 +12,6 @@ const Login = () => {
     name: "",
   });
   const [errorMsg, setErrorMsg] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
   const handleInputChange = (e) => {
     setLoginData({
       ...loginData,
@@ -29,59 +20,33 @@ const Login = () => {
     setErrorMsg("");
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setErrorMsg("");
-    setIsLoading(true);
 
-    try {
-      const endpoint = isLogin ? "/api/auth/login" : "/api/auth/signup";
-      const bodyPayload = isLogin
-        ? { email: loginData.email, password: loginData.password, role }
-        : {
-            email: loginData.email,
-            password: loginData.password,
-            name: loginData.name,
-            role,
-          };
-
-      const response = await fetch(`http://localhost:5000${endpoint}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(bodyPayload),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setErrorMsg(data.error || "An error occurred");
-        setIsLoading(false);
-        return;
-      }
-      if (data.name) {
-        localStorage.setItem("userName", data.name);
-      }
-      if (data.role) {
-        localStorage.setItem("userRole", data.role);
-      }
-      if (data.role === "student") {
-        navigate("/student");
+    if (isLogin) {
+      if (loginData.email && loginData.password) {
+        localStorage.setItem("userName", loginData.email);
+        localStorage.setItem("userRole", role);
+        navigate(role === "student" ? "/student" : "/recruiter");
       } else {
-        navigate("/recruiter");
+        setErrorMsg("Please enter email and password");
       }
-    } catch (err) {
-      console.error(err);
-      setErrorMsg("Failed to connect to the server.");
-      setIsLoading(false);
+    } else {
+      if (loginData.email && loginData.password && loginData.name) {
+        localStorage.setItem("userName", loginData.name);
+        localStorage.setItem("userRole", role);
+        navigate(role === "student" ? "/student" : "/recruiter");
+      } else {
+        setErrorMsg("Please fill all fields");
+      }
     }
   };
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#010409] p-4">
-      <div className="pointer-events-none absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-blue-500/10 blur-[100px]"></div>
-      <div className="pointer-events-none absolute right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-purple-500/10 blur-[100px]"></div>
+      <div className="pointer-events-none absolute top-1/4 left-1/4 h-96 w-96"></div>
+      <div className="pointer-events-none absolute right-1/4 bottom-1/4 h-96 w-96"></div>
       <div className="absolute top-8 left-8 z-20">
         <button
           onClick={() => navigate("/")}
@@ -89,10 +54,8 @@ const Login = () => {
         >
           ← Home
         </button>
-      </div>
-
+      </div>  
       <div className="relative z-10 w-full max-w-md border-2 border-black bg-white p-8 transition-transform duration-200">
-        {/* Header */}
         <div className="mb-8 border-2 border-black bg-[#b8ff22] py-4 text-center">
           <h2 className="mb-1 text-4xl font-black tracking-tight text-black uppercase">
             {isLogin ? "Welcome Back" : "Get Smart"}
@@ -101,14 +64,12 @@ const Login = () => {
             {isLogin ? "Access your dashboard" : "Join the revolution"}
           </p>
         </div>
-
-        {/* Role Selection Tabs */}
         <div className="mb-8 flex gap-4 p-1">
           <button
             onClick={() => setRole("student")}
             className={`flex flex-1 cursor-pointer items-center justify-center gap-2 px-4 py-3 font-black uppercase transition-all duration-200 ${
               role === "student"
-                ? "-translate-x-2px -translate-y-2px border-2 border-black bg-[#20beff] text-black"
+                ? "border-2 border-black bg-[#20beff] text-black"
                 : "border-2 border-black bg-white text-black hover:bg-gray-100"
             }`}
           >
@@ -119,7 +80,7 @@ const Login = () => {
             onClick={() => setRole("recruiter")}
             className={`flex flex-1 cursor-pointer items-center justify-center gap-2 px-4 py-3 font-black uppercase transition-all duration-200 ${
               role === "recruiter"
-                ? "-translate-x-2 -translate-y-2 border-2 border-black bg-[#ff90e8] text-black"
+                ? "border-2 border-black bg-[#ff90e8] text-black"
                 : "border-2 border-black bg-white text-black hover:bg-gray-100"
             }`}
           >
@@ -127,14 +88,11 @@ const Login = () => {
             RECRUITER
           </button>
         </div>
-
         {errorMsg && (
           <div className="mb-4 border-2 border-red-600 bg-red-100 p-3 text-center font-bold text-red-600 uppercase">
             {errorMsg}
           </div>
         )}
-
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
           {!isLogin && (
             <div className="space-y-1">
@@ -150,7 +108,7 @@ const Login = () => {
                   name="name"
                   value={loginData.name}
                   onChange={handleInputChange}
-                  placeholder="JOHN DOE"
+                  placeholder="Enter Name"
                   className="w-full border-2 border-black bg-white py-3 pr-4 pl-10 font-semibold text-black uppercase placeholder-gray-400 transition-all duration-200"
                   required={!isLogin}
                 />
@@ -177,7 +135,6 @@ const Login = () => {
               />
             </div>
           </div>
-
           <div className="space-y-1">
             <label className="ml-1 text-sm font-black text-black uppercase">
               Password
@@ -200,22 +157,13 @@ const Login = () => {
 
           <button
             type="submit"
-            disabled={isLoading}
-            className={`group mt-4 flex w-full items-center justify-center gap-2 border-2 border-black bg-[#ff3366] py-4 font-black text-white uppercase transition-all duration-200 ${isLoading ? "translate-x-2 translate-y-2 cursor-not-allowed opacity-50 shadow-none" : "cursor-pointer "}`}
+            className="group mt-4 flex w-full cursor-pointer items-center justify-center gap-2 border-2 border-black bg-[#ff3366] py-4 font-black text-white uppercase transition-all duration-200"
           >
-            <span>
-              {isLoading
-                ? "Processing..."
-                : isLogin
-                  ? "Sign In"
-                  : "Create Account"}
-            </span>
-            {!isLoading && (
-              <ChevronRight
-                size={20}
-                className="transition-transform group-hover:translate-x-1"
-              />
-            )}
+            <span>{isLogin ? "Sign In" : "Create Account"}</span>
+            <ChevronRight
+              size={20}
+              className="transition-transform group-hover:translate-x-1"
+            />
           </button>
         </form>
         <div className="mt-8 border-2 border-black bg-gray-100 p-2 text-center">

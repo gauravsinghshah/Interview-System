@@ -153,7 +153,7 @@ const Footer = () => {
                 type="email"
                 placeholder="Enter your email"
                 className="w-full rounded-lg border border-black/10 bg-black/5 px-4 py-3 text-black placeholder-zinc-500 transition-all focus:border-transparent focus:ring-2 focus:ring-blue-500/50 focus:outline-none"
-                value={email}
+                value= {email}
                 onChange={(e) => {
                   setEmail(e.target.value);
                 }}
@@ -170,12 +170,12 @@ const Footer = () => {
 
         <div className="flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 md:flex-row">
           <p className="text-sm text-zinc-500">
-            © {new Date().getFullYear()} InterviewAI. All rights reserved.
+            © 2026 InterviewAI. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm text-zinc-500">
             <span className="cursor-pointer transition-colors hover:text-black">
               Privacy
-            </span>
+            </span> 
             <span className="cursor-pointer transition-colors hover:text-black">
               Terms
             </span>

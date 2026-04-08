@@ -2,7 +2,7 @@ import React from "react";
 
 const About = () => {
   return (
-    <div className="flex min-h-screen w-full flex-col gap-10 bg-[#f0ebe3] px-6 py-16 text-black md:px-10 lg:flex-row lg:items-center lg:justify-between lg:px-20">
+    <div className="flex min-h-screen w-full flex-col gap-10 bg-[#f0ebe3] px-6 py-16 text-black md:px-10 lg:flex-row lg:items-center lg:px-20">
       <div className="mb-10 flex w-full max-w-2xl flex-col overflow-hidden text-[42px] leading-none font-extrabold uppercase md:text-[65px]">
         <span className="mt-2">Hire Talent</span>
         <span>
@@ -25,7 +25,7 @@ const About = () => {
         </span>
       </div>
       <div className="mb-20 grid w-full max-w-152 grid-cols-1 border border-gray-300 sm:grid-cols-2 lg:mt-16">
-        <div className="flex flex-col justify-center border-b border-gray-300 p-6 transition-colors duration-300 hover:bg-black hover:text-white md:p-8">
+        <div className="flex flex-col justify-center border-b border-gray-300 p-6 transition-colors duration-300 hover:bg-black hover:text-white md:p-8  sm:border-r sm:border-b-0 ">
           <span className="text-5xl font-bold md:text-7xl">10x</span>
           <span className="mt-4 text-xs font-semibold tracking-widest text-gray-400 uppercase">
             Faster hiring pipelines

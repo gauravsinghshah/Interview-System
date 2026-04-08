@@ -3,16 +3,8 @@ import { Plus, ArrowRight, Briefcase } from "lucide-react";
 
 const mockCandidates = [
   {
-    id: 101,
-    name: "Sarah Connor",
-    role: "Senior Frontend Engineer",
-    rating: 98,
-    status: "Offer Ready",
-    exp: "8 Yrs",
-  },
-  {
     id: 102,
-    name: "John Smith",
+    name: "Nijamudin Sourabh",
     role: "Senior Frontend Engineer",
     rating: 85,
     status: "Interviewed",
@@ -20,7 +12,7 @@ const mockCandidates = [
   },
   {
     id: 103,
-    name: "Emily Chen",
+    name: "Mohmad Naman",
     role: "Senior Frontend Engineer",
     rating: 92,
     status: "Screening",
@@ -28,7 +20,7 @@ const mockCandidates = [
   },
   {
     id: 104,
-    name: "Michael Chang",
+    name: "Abdul Shahil",
     role: "Backend Systems Architect",
     rating: 95,
     status: "Interviewed",
@@ -36,7 +28,7 @@ const mockCandidates = [
   },
   {
     id: 105,
-    name: "Jessica Davis",
+    name: "Molana Gaurav Singh",
     role: "Backend Systems Architect",
     rating: 78,
     status: "Pending",
@@ -55,9 +47,7 @@ const Recruiter = () => {
     salaryMin: "",
     salaryMax: "",
   });
-
-  const [jobs, setJobs] = useState([]);
-
+  const [jobs, setJobs] = useState([])
   useEffect(() => {
     let name = "Recruiter";
     const storedName = localStorage.getItem("userName");
@@ -65,7 +55,6 @@ const Recruiter = () => {
       name = storedName.split(" ")[0];
       setUserName(name);
     }
-
     fetch(`http://localhost:5000/api/jobs?postedBy=${name}`)
       .then((res) => res.json())
       .then((data) => {
@@ -76,7 +65,6 @@ const Recruiter = () => {
       })
       .catch((err) => console.error("Error fetching jobs:", err));
   }, []);
-
   const handleJobSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -107,8 +95,7 @@ const Recruiter = () => {
     }
   };
 
-  const filteredCandidates = mockCandidates.filter((c) => c.role === activeJob);
-
+  const filteredCandidates = mockCandidates.filter((c) => activeJob);
   return (
     <div className="relative min-h-screen w-full border-y-2 border-black bg-[#f2efe9] font-sans text-black">
       {isPostingModalOpen && (
@@ -347,7 +334,6 @@ const Recruiter = () => {
                   >
                     {candidate.status}
                   </span>
-
                   <button className="group border-2 border-black p-2 transition-colors hover:bg-black hover:text-white">
                     <ArrowRight
                       size={20}
