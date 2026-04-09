@@ -7,19 +7,14 @@ const Job = require("./models/Job");
 
 const app = express();
 
-// Middleware
 app.use(express.json());
 app.use(cors());
 
-// Connect to MongoDB locally
 mongoose
   .connect("mongodb://localhost:27017/interview-system-db")
   .then(() => console.log("Connected to local MongoDB"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-// --- API Endpoints ---
-
-// 0. Jobs
 app.post("/api/jobs", async (req, res) => {
   try {
     const newJob = new Job(req.body);
