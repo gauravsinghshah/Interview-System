@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Plus, ArrowRight, Briefcase } from "lucide-react";
+import RecruiterNav from "./RecruiterNav";
 
 const mockCandidates = [
   {
@@ -98,6 +99,7 @@ const Recruiter = () => {
   const filteredCandidates = mockCandidates.filter((c) => activeJob);
   return (
     <div className="relative min-h-screen w-full border-y-2 border-black bg-[#f2efe9] font-sans text-black">
+      <RecruiterNav />
       {isPostingModalOpen && (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
           <div className="w-full max-w-lg border-2 border-black bg-white p-8">

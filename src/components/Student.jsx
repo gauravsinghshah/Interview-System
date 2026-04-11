@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Box from "./Box";
 import Card from "./Cards";
 import { ArrowRight, Sparkles } from "lucide-react";
-import Navbar from "./Navbar";
+import StudentNav from "./StudentNav";
 
 const Student = () => {
   const [userName, setUserName] = useState("Alex");
@@ -38,6 +38,7 @@ const Student = () => {
 
   return (
     <div className="w-full border-y-2 border-black bg-[#f2efe9] text-black">
+       
       <main className="mx-auto max-w-7xl px-6 py-16 md:py-24">
         <div className="mb-16">
           <h1 className="mb-4 text-5xl font-black uppercase md:text-7xl">
