@@ -38,7 +38,7 @@ const Student = () => {
 
   return (
     <div className="w-full border-y-2 border-black bg-[#f2efe9] text-black">
-       
+       <StudentNav />
       <main className="mx-auto max-w-7xl px-6 py-16 md:py-24">
         <div className="mb-16">
           <h1 className="mb-4 text-5xl font-black uppercase md:text-7xl">

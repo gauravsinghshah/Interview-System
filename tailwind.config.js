@@ -4,6 +4,7 @@ export default {
       colors: {
         pb: 'var(--color-blue)',
         pbg: 'var(--color-bg)',
+        pw: 'vat(--color-white)'
       },
     },
   },
