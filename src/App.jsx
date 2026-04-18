@@ -43,7 +43,7 @@ function Home() {
 function App() {
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-[#010409]">
-      {/* <Routes>
+      <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route
@@ -62,8 +62,8 @@ function App() {
             </ProtectedRoute>
           }
         />
-      </Routes> */}
-      <List name="Sourabh Singh" />
+      </Routes>
+      {/* <List name="Sourabh Singh" role="Machine Learning" /> */}
     </div>
   );
 }

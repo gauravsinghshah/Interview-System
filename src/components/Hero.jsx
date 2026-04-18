@@ -4,7 +4,7 @@ const Hero = () => {
   return (
     <div className="relative bg-pbg flex h-screen w-full flex-col items-center justify-center overflow-hidden font-sans text-white">
       <div className="relative  flex -translate-y-6 flex-col items-center justify-center leading-[0.85] max-md:scale-150 max-sm:scale-180 md:-translate-y-12">
-        <h1 className="m-0 cursor-default p-0 text-[15vw] font-black tracking-tighter text-[#e8e4dc] transition-transform duration-700 hover:scale-105 md:text-[18vw]">
+        <h1 className="m-0 cursor-default p-0 text-[15vw] font-black tracing-tighter text-[#e8e4dc] transition-transform duration-700 hover:scale-105 md:text-[18vw]">
           INTER
         </h1>
         <h1 className="text-[15vw] font-black tracking-tighter text-transparent transition-colors duration-500 [-webkit-text-stroke:1px_#2563eb] hover:text-[#2563eb] md:text-[18vw]">
