@@ -81,17 +81,17 @@ const Login = () => {
       <div className="absolute top-8 left-8 z-20">
         <button
           onClick={() => navigate("/")}
-          className="cursor-pointer border-2 border-black bg-white px-6 py-2 font-black text-black uppercase transition-all duration-200 hover:translate-x-2 hover:translate-y-2"
+          className="cursor-pointer border-2 border-black bg-white px-6 py-2 font-black text-black uppercase transition-all duration-200 hover:translate-x-2 hover:bg-pb hover:text-white  "
         >
           ← Home
         </button>
       </div>
-      <div className="relative z-10 w-full max-w-md border-2 border-black bg-white p-8 transition-transform duration-200">
-        <div className="mb-8 border-2 border-black bg-[#b8ff22] py-4 text-center">
-          <h2 className="mb-1 text-4xl font-black tracking-tight text-black uppercase">
+      <div className="relative rounded-2xl z-10 w-full max-w-md border-2 border-black bg-white p-8 transition-transform duration-200">
+        <div className="bg-pb mb-8 border-2 border-black py-4 text-center">
+          <h2 className="mb-1 text-4xl font-black tracking-tight text-white uppercase">
             {isLogin ? "Welcome Back" : "Get Smart"}
           </h2>
-          <p className="text-sm font-bold text-black uppercase">
+          <p className="text-sm font-bold text-white uppercase">
             {isLogin ? "Access your dashboard" : "Join the revolution"}
           </p>
         </div>
@@ -100,8 +100,8 @@ const Login = () => {
             onClick={() => setRole("student")}
             className={`flex flex-1 cursor-pointer items-center justify-center gap-2 px-4 py-3 font-black uppercase transition-all duration-200 ${
               role === "student"
-                ? "border-2 border-black bg-[#20beff] text-black"
-                : "border-2 border-black bg-white text-black hover:bg-gray-100"
+                ? "bg-pb border-2 border-black text-white"
+                : "border-2 border-black bg-white text-black hover:bg-pb"
             }`}
           >
             <User size={18} />
@@ -111,8 +111,8 @@ const Login = () => {
             onClick={() => setRole("recruiter")}
             className={`flex flex-1 cursor-pointer items-center justify-center gap-2 px-4 py-3 font-black uppercase transition-all duration-200 ${
               role === "recruiter"
-                ? "border-2 border-black bg-[#ff90e8] text-black"
-                : "border-2 border-black bg-white text-black hover:bg-gray-100"
+                ? "bg-pb border-2 border-black text-white"
+                : "border-2 border-black bg-white text-black hover:bg-pb"
             }`}
           >
             <Briefcase size={18} />
@@ -189,7 +189,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="group mt-4 flex w-full cursor-pointer items-center justify-center gap-2 border-2 border-black bg-[#ff3366] py-4 font-black text-white uppercase transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-70"
+            className="group hover:bg-pb mt-4 flex w-full cursor-pointer items-center justify-center gap-2 border-2 border-black bg-white py-4 font-black text-black uppercase transition-all duration-200 hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
           >
             <span>
               {isSubmitting
@@ -204,10 +204,10 @@ const Login = () => {
             />
           </button>
         </form>
-        <div className="mt-8 border-2 border-black bg-gray-100 p-2 text-center">
+        <div className="hover:bg-pb group mt-3 border-2 border-black bg-gray-100 p-2 text-center transition-colors">
           <button
             onClick={() => setIsLogin(!isLogin)}
-            className="cursor-pointer font-black text-black uppercase transition-colors hover:text-[#ff3366]"
+            className="w-full cursor-pointer font-black text-black uppercase transition-colors group-hover:text-white"
           >
             {isLogin
               ? "DON'T HAVE AN ACCOUNT? SIGN UP"

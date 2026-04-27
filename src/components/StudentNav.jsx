@@ -2,12 +2,12 @@ import { Link } from "react-router-dom";
 
 const StudentNav = () => {
   return (
-    <div className="fixed top-0 z-50 w-full bg-[#0a0a0a] font-mono">
+    <div className="fixed z-50 w-full bg-[#0a0a0a] font-mono">
       <div className="flex items-center justify-between px-4 py-3 md:px-12">
         <div className="cursor-pointer text-lg font-black tracking-[0.2em] text-white md:text-xl">
           INTERVIEW
         </div>
-        <div className="hidden items-center gap-8 text-sm font-bold tracking-widest text-gray-400 md:flex uppercase">
+        <div className="hidden items-center gap-8 text-sm font-bold tracking-widest text-gray-400 uppercase md:flex">
           <a href="#about" className="transition-colors hover:text-white">
             Stu
           </a>

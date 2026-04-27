@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
+require("dotenv").config();
+
 const User = require("./models/User");
 const Job = require("./models/Job");
 
@@ -10,9 +12,14 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+const dbUser = process.env.DB_USERNAME;
+const dbPass = process.env.DB_PASSWORD;
+
 mongoose
-  .connect("mongodb://localhost:27017/interview-system-db")
-  .then(() => console.log("Connected to local MongoDB"))
+  .connect(
+    `mongodb+srv://${dbUser}:${dbPass}@interview-system-db.wlkjqix.mongodb.net/interview-system-db?appName=Interview-system-db`,
+  )
+  .then(() => console.log("Connected to MongoDB Atlas"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
 app.post("/api/jobs", async (req, res) => {

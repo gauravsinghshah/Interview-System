@@ -11,6 +11,7 @@ import Navbar from "./components/Navbar";
 import Recruiter from "./components/Recruiter";
 import Student from "./components/Student";
 import Login from "./components/login";
+import List from "./components/List";
 
 const ProtectedRoute = ({ children, allowedRole }) => {
   const userName = sessionStorage.getItem("userName");
@@ -28,6 +29,7 @@ const ProtectedRoute = ({ children, allowedRole }) => {
 function Home() {
   return (
     <>
+      <List />
       <Navbar />
       <Hero />
       <About />
@@ -61,6 +63,7 @@ function App() {
           }
         />
       </Routes>
+      {/* <List name="Sourabh Singh" role="Machine Learning" /> */}
     </div>
   );
 }
