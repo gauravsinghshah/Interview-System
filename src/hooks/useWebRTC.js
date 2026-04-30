@@ -85,11 +85,24 @@ export function useWebRTC() {
         setConnectionState("connecting");
         setError(null);
 
-        // Get local media
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true,
-        });
+        // Get local media — gracefully fallback if devices are missing
+        let stream = null;
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        } catch {
+          try {
+            stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
+            setIsCameraOff(true);
+          } catch {
+            try {
+              stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+              setIsMuted(true);
+            } catch {
+              // No media devices at all — still allow connection for screen share etc.
+              console.warn("No media devices found, joining without camera/mic");
+            }
+          }
+        }
         localStreamRef.current = stream;
 
         // Connect to signaling server
