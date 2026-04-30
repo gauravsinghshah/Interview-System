@@ -38,8 +38,20 @@ const mockCandidates = [
 ];
 
 const Recruiter = () => {
-  const [activeJob, setActiveJob] = useState("Senior Frontend Engineer");
+  const [activeJobId, setActiveJobId] = useState(null);
+  const [applicants, setApplicants] = useState([]);
   const [userName, setUserName] = useState("Recruiter");
+  const [viewStyle, setViewStyle] = useState("grid");
+  const [candidateDetailsModalOpen, setCandidateDetailsModalOpen] =
+    useState(false);
+  const [candidateDetails, setCandidateDetails] = useState(null);
+  const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
+  const [selectedApplication, setSelectedApplication] = useState(null);
+  const [interviewDetails, setInterviewDetails] = useState({
+    date: "",
+    time: "",
+    link: "",
+  });
   const [isPostingModalOpen, setIsPostingModalOpen] = useState(false);
   const [newJobData, setNewJobData] = useState({
     role: "",
@@ -56,28 +68,46 @@ const Recruiter = () => {
       name = storedName.split(" ")[0];
       setUserName(name);
     }
-    fetch(`http://localhost:5000/api/jobs?postedBy=${name}`)
+    const token = sessionStorage.getItem("token");
+    fetch(`http://localhost:5000/api/jobs?me=true`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
       .then((res) => res.json())
       .then((data) => {
         setJobs(data);
-        if (data.length > 0 && activeJob === "Senior Frontend Engineer") {
-          setActiveJob(data[0].role);
+        if (data.length > 0) {
+          setActiveJobId(data[0]._id);
         }
       })
       .catch((err) => console.error("Error fetching jobs:", err));
   }, []);
+
+  useEffect(() => {
+    if (!activeJobId) return;
+    const token = sessionStorage.getItem("token");
+    fetch(`http://localhost:5000/api/applications/${activeJobId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => setApplicants(data))
+      .catch((err) => console.error("Error fetching applicants:", err));
+  }, [activeJobId]);
   const handleJobSubmit = async (e) => {
     e.preventDefault();
     try {
+      const token = sessionStorage.getItem("token");
       const response = await fetch("http://localhost:5000/api/jobs", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ ...newJobData, postedBy: userName }),
       });
       if (response.ok) {
         const newJob = await response.json();
         setJobs([newJob, ...jobs]);
-        if (jobs.length === 0) setActiveJob(newJob.role);
+        if (jobs.length === 0) setActiveJobId(newJob._id);
         alert("Job Posted Successfully!");
         setIsPostingModalOpen(false);
         setNewJobData({
@@ -96,7 +126,48 @@ const Recruiter = () => {
     }
   };
 
-  const filteredCandidates = mockCandidates.filter((c) => activeJob);
+  const handleScheduleClick = (app) => {
+    setSelectedApplication(app);
+    setScheduleModalOpen(true);
+  };
+
+  const handleScheduleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = sessionStorage.getItem("token");
+      const response = await fetch("http://localhost:5000/api/interviews", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          jobId: activeJobId,
+          studentId: selectedApplication.studentId._id,
+          ...interviewDetails,
+        }),
+      });
+      if (response.ok) {
+        alert("Interview Scheduled!");
+        setScheduleModalOpen(false);
+        setApplicants(
+          applicants.map((app) =>
+            app._id === selectedApplication._id
+              ? { ...app, status: "Screening" }
+              : app,
+          ),
+        );
+      } else {
+        alert("Failed to schedule interview");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const activeJobData = jobs.find((j) => j._id === activeJobId);
+  const activeJobRole = activeJobData ? activeJobData.role : "";
+
   return (
     <div className="relative min-h-screen w-full border-y-2 border-black bg-[#f2efe9] font-sans text-black">
       <RecruiterNav />
@@ -213,6 +284,189 @@ const Recruiter = () => {
         </div>
       )}
 
+      {scheduleModalOpen && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md border-2 border-black bg-white p-8">
+            <h2 className="mb-6 text-2xl font-black uppercase">
+              Schedule Interview
+            </h2>
+            <form
+              onSubmit={handleScheduleSubmit}
+              className="space-y-4 font-bold"
+            >
+              <div>
+                <label className="mb-1 block text-sm uppercase">Date</label>
+                <input
+                  required
+                  type="date"
+                  value={interviewDetails.date}
+                  onChange={(e) =>
+                    setInterviewDetails({
+                      ...interviewDetails,
+                      date: e.target.value,
+                    })
+                  }
+                  className="w-full border-2 border-black px-4 py-3 transition-all hover:translate-x-1 hover:translate-y-1"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm uppercase">Time</label>
+                <input
+                  required
+                  type="time"
+                  value={interviewDetails.time}
+                  onChange={(e) =>
+                    setInterviewDetails({
+                      ...interviewDetails,
+                      time: e.target.value,
+                    })
+                  }
+                  className="w-full border-2 border-black px-4 py-3 transition-all hover:translate-x-1 hover:translate-y-1"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm uppercase">
+                  Meeting Link
+                </label>
+                <input
+                  required
+                  type="url"
+                  value={interviewDetails.link}
+                  onChange={(e) =>
+                    setInterviewDetails({
+                      ...interviewDetails,
+                      link: e.target.value,
+                    })
+                  }
+                  className="w-full border-2 border-black px-4 py-3 transition-all hover:translate-x-1 hover:translate-y-1"
+                  placeholder="https://zoom.us/j/..."
+                />
+              </div>
+              <div className="mt-8 flex justify-end gap-4 border-t-2 border-black pt-6">
+                <button
+                  type="button"
+                  onClick={() => setScheduleModalOpen(false)}
+                  className="text-gray-500 uppercase hover:text-black"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="border-2 border-black bg-[#1800ff] px-6 py-2 font-black text-white uppercase"
+                >
+                  Schedule
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {candidateDetailsModalOpen && candidateDetails && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-2xl border-2 border-black bg-white p-8">
+            <div className="mb-6 flex items-start justify-between border-b-2 border-black pb-4">
+              <div>
+                <h2 className="text-3xl font-black uppercase">
+                  {candidateDetails.studentId?.name || "Unknown"}
+                </h2>
+                <p className="font-mono font-bold text-gray-600">
+                  {candidateDetails.studentId?.email}
+                </p>
+              </div>
+              <button
+                onClick={() => setCandidateDetailsModalOpen(false)}
+                className="cursor-pointer border-2 border-black px-3 py-1 font-bold uppercase transition-colors hover:bg-black hover:text-white"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="border-2 border-black p-4">
+                  <h3 className="mb-2 text-sm font-black text-gray-500 uppercase">
+                    Experience
+                  </h3>
+                  <p className="font-bold">
+                    {candidateDetails.studentId?.experience || "N/A"}
+                  </p>
+                </div>
+                <div className="border-2 border-black p-4">
+                  <h3 className="mb-2 text-sm font-black text-gray-500 uppercase">
+                    Global Skills
+                  </h3>
+                  <p className="font-bold">
+                    {candidateDetails.studentId?.skills?.join(", ") ||
+                      "None listed"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="border-2 border-black bg-gray-50 p-4">
+                <h3 className="mb-2 text-sm font-black text-[#1800ff] uppercase">
+                  Application Specific Details
+                </h3>
+                <div className="mb-4">
+                  <h4 className="mb-1 text-xs font-bold text-gray-500 uppercase">
+                    Custom Skills
+                  </h4>
+                  <p className="font-bold">
+                    {candidateDetails.applicationSkills?.length > 0
+                      ? candidateDetails.applicationSkills.join(", ")
+                      : "Used global profile skills"}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="mb-1 text-xs font-bold text-gray-500 uppercase">
+                    Cover Letter / Notes
+                  </h4>
+                  <p className="font-medium whitespace-pre-wrap">
+                    {candidateDetails.applicationNotes ||
+                      "No specific notes provided."}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                {candidateDetails.studentId?.resumeUrl && (
+                  <a
+                    href={candidateDetails.studentId.resumeUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex-1 border-2 border-black py-2 text-center font-bold uppercase transition-colors hover:bg-gray-100"
+                  >
+                    View Resume
+                  </a>
+                )}
+                {candidateDetails.studentId?.githubUrl && (
+                  <a
+                    href={candidateDetails.studentId.githubUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex-1 border-2 border-black py-2 text-center font-bold uppercase transition-colors hover:bg-gray-100"
+                  >
+                    View GitHub
+                  </a>
+                )}
+              </div>
+            </div>
+
+            <div className="mt-8 flex justify-end gap-4 border-t-2 border-black pt-6">
+              <button
+                onClick={() => {
+                  setCandidateDetailsModalOpen(false);
+                  handleScheduleClick(candidateDetails);
+                }}
+                className="cursor-pointer border-2 border-black bg-[#1800ff] px-6 py-2 font-black text-white uppercase transition-colors hover:bg-black"
+              >
+                Schedule Interview
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <main className="mx-auto max-w-7xl px-6 py-16 md:py-24">
         <div className="mb-16 flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div>
@@ -234,6 +488,30 @@ const Recruiter = () => {
           </button>
         </div>
 
+        {/* Dashboard Stats */}
+        <div className="mb-12 grid grid-cols-1 gap-6 sm:grid-cols-3">
+          <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_rgba(0,0,0,1)] transition-transform hover:-translate-y-1 hover:shadow-[6px_6px_0px_rgba(0,0,0,1)]">
+            <h3 className="mb-2 font-mono text-sm font-bold text-gray-500 uppercase">
+              Active Roles
+            </h3>
+            <p className="text-5xl font-black text-[#1800ff]">{jobs.length}</p>
+          </div>
+          <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_rgba(0,0,0,1)] transition-transform hover:-translate-y-1 hover:shadow-[6px_6px_0px_rgba(0,0,0,1)]">
+            <h3 className="mb-2 font-mono text-sm font-bold text-gray-500 uppercase">
+              Pipeline Candidates
+            </h3>
+            <p className="text-5xl font-black text-[#1800ff]">
+              {applicants.length}
+            </p>
+          </div>
+          <div className="flex flex-col justify-center border-2 border-black bg-[#1800ff] p-6 shadow-[4px_4px_0px_rgba(0,0,0,1)] transition-transform hover:-translate-y-1 hover:shadow-[6px_6px_0px_rgba(0,0,0,1)]">
+            <h3 className="mb-2 font-mono text-sm font-bold text-white uppercase">
+              Profile Views
+            </h3>
+            <p className="text-5xl font-black text-white">{jobs.length * 14}</p>
+          </div>
+        </div>
+
         {/* Jobs Section */}
         <div className="mb-20">
           <h2 className="mb-8 border-b-2 border-black pb-4 text-3xl font-black tracking-tight uppercase md:text-4xl">
@@ -248,9 +526,9 @@ const Recruiter = () => {
               jobs.map((job) => (
                 <div
                   key={job._id || job.id}
-                  onClick={() => setActiveJob(job.role)}
+                  onClick={() => setActiveJobId(job._id)}
                   className={`cursor-pointer border-2 border-black p-6 transition-all ${
-                    activeJob === job.role
+                    activeJobId === job._id
                       ? "translate-x-1 translate-y-1 bg-black text-white"
                       : "bg-white text-black hover:bg-gray-50"
                   }`}
@@ -259,12 +537,14 @@ const Recruiter = () => {
                     <Briefcase
                       size={28}
                       className={
-                        activeJob === job.role ? "text-[#1800ff]" : "text-black"
+                        activeJobId === job._id
+                          ? "text-[#1800ff]"
+                          : "text-black"
                       }
                     />
                     <span
                       className={`border px-2 py-1 font-mono text-xs font-bold uppercase ${
-                        activeJob === job.role
+                        activeJobId === job._id
                           ? "border-white/20 bg-white/10"
                           : "border-black bg-[#1800ff] text-white"
                       }`}
@@ -276,9 +556,10 @@ const Recruiter = () => {
                     {job.role}
                   </h3>
                   <div
-                    className={`font-mono text-sm font-bold tracking-widest uppercase ${activeJob === job.role ? "text-gray-300" : "text-gray-500"}`}
+                    className={`font-mono text-sm font-bold tracking-widest uppercase ${activeJobId === job._id ? "text-gray-300" : "text-gray-500"}`}
                   >
-                    0 Candidates
+                    {job._id === activeJobId ? applicants.length : "?"}{" "}
+                    Candidates
                   </div>
                 </div>
               ))
@@ -293,28 +574,60 @@ const Recruiter = () => {
                 Candidate Pipeline
               </h2>
               <p className="mt-2 font-mono text-sm font-bold text-gray-600 uppercase">
-                Found {filteredCandidates.length} matches for {activeJob}
+                Found {applicants.length} matches for {activeJobRole}
               </p>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setViewStyle("grid")}
+                className={`cursor-pointer border-2 border-black px-4 py-2 font-bold uppercase transition-colors ${viewStyle === "grid" ? "bg-black text-white" : "bg-white hover:bg-gray-100"}`}
+              >
+                Grid
+              </button>
+              <button
+                onClick={() => setViewStyle("list")}
+                className={`cursor-pointer border-2 border-black px-4 py-2 font-bold uppercase transition-colors ${viewStyle === "list" ? "bg-black text-white" : "bg-white hover:bg-gray-100"}`}
+              >
+                List
+              </button>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filteredCandidates.map((candidate) => (
+          <div
+            className={
+              viewStyle === "grid"
+                ? "grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+                : "flex flex-col gap-4"
+            }
+          >
+            {applicants.map((candidate) => (
               <div
-                key={candidate.id}
-                className="flex flex-col border-2 border-black bg-white p-6 transition-all hover:translate-x-1 hover:translate-y-1"
+                key={candidate._id}
+                className={`flex flex-col border-2 border-black bg-white p-6 transition-all hover:translate-x-1 hover:translate-y-1 ${viewStyle === "list" ? "md:flex-row md:items-center md:justify-between" : ""}`}
               >
-                <div className="mb-6 flex items-start justify-between">
+                <div
+                  className={`mb-6 flex items-start justify-between ${viewStyle === "list" ? "mb-0 flex-1" : ""}`}
+                >
                   <div>
-                    <h3 className="text-2xl leading-tight font-black uppercase">
-                      {candidate.name}
+                    <h3
+                      onClick={() => {
+                        setCandidateDetails(candidate);
+                        setCandidateDetailsModalOpen(true);
+                      }}
+                      className="cursor-pointer text-2xl leading-tight font-black uppercase hover:text-[#1800ff] hover:underline"
+                    >
+                      {candidate.studentId
+                        ? candidate.studentId.name
+                        : "Unknown"}
                     </h3>
                     <p className="mt-2 font-mono text-sm font-bold text-gray-500 uppercase">
                       {candidate.exp} Exp
                     </p>
                   </div>
 
-                  <div className="min-w-70px flex flex-col items-center justify-center border-2 border-black bg-[#1800ff] p-2 text-white">
+                  <div
+                    className={`min-w-70px flex flex-col items-center justify-center border-2 border-black bg-[#1800ff] p-2 text-white ${viewStyle === "list" ? "ml-6" : ""}`}
+                  >
                     <span className="mb-1 font-mono text-[10px] font-bold tracking-widest uppercase">
                       AI Score
                     </span>
@@ -324,7 +637,9 @@ const Recruiter = () => {
                   </div>
                 </div>
 
-                <div className="mt-auto flex items-center justify-between border-t-2 border-black pt-6">
+                <div
+                  className={`mt-auto flex items-center justify-between border-t-2 border-black pt-6 ${viewStyle === "list" ? "mt-0 ml-6 flex-1 justify-end gap-6 border-t-0 pt-0" : ""}`}
+                >
                   <span
                     className={`border-2 border-black px-3 py-1 font-mono text-xs font-bold uppercase ${
                       candidate.status === "Offer Ready"
@@ -336,17 +651,17 @@ const Recruiter = () => {
                   >
                     {candidate.status}
                   </span>
-                  <button className="group border-2 border-black p-2 transition-colors hover:bg-black hover:text-white">
-                    <ArrowRight
-                      size={20}
-                      className="transition-transform group-hover:translate-x-1"
-                    />
+                  <button
+                    onClick={() => handleScheduleClick(candidate)}
+                    className="group cursor-pointer border-2 border-black px-4 py-2 text-xs font-black uppercase transition-colors hover:bg-black hover:text-white"
+                  >
+                    Schedule
                   </button>
                 </div>
               </div>
             ))}
 
-            {filteredCandidates.length === 0 && (
+            {applicants.length === 0 && (
               <div className="col-span-full border-2 border-dashed border-black bg-white py-16 text-center">
                 <p className="font-mono text-xl font-bold text-gray-500 uppercase">
                   No candidates match your criteria.

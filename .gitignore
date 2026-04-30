@@ -25,3 +25,7 @@ dist-ssr
 /Design
 /stitch_student_dashboard
 .cph/
+
+#graphify
+/graphify-out
+.graphify*

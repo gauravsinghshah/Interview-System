@@ -8,18 +8,12 @@ const StudentNav = () => {
           INTERVIEW
         </div>
         <div className="hidden items-center gap-8 text-sm font-bold tracking-widest text-gray-400 uppercase md:flex">
-          <a href="#about" className="transition-colors hover:text-white">
-            Stu
-          </a>
-          <a href="#dev" className="transition-colors hover:text-white">
-            Developers
-          </a>
-          <a href="#updates" className="transition-colors hover:text-white">
-            Updates
-          </a>
-          <a href="#footer" className="transition-colors hover:text-white">
-            FAQ
-          </a>
+          <Link to="/student" className="transition-colors hover:text-white">
+            Dashboard
+          </Link>
+          <Link to="/profile" className="transition-colors hover:text-white">
+            Profile
+          </Link>
         </div>
 
         <div className="flex items-center gap-3">
