@@ -17,18 +17,19 @@ const { auth, isRecruiter } = require("./middleware/auth");
 const app = express();
 const server = http.createServer(app);
 
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+const FRONTEND_URL = process.env.FRONTEND_URL || "";
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 
-const io = new Server(server, {
-  cors: {
-    origin: FRONTEND_URL,
-    methods: ["GET", "POST"],
-  },
-});
+const corsOptions = {
+  origin: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+};
+
+const io = new Server(server, { cors: corsOptions });
 
 app.use(express.json());
-app.use(cors({ origin: FRONTEND_URL }));
+app.use(cors(corsOptions));
 
 const MONGODB_URI =
   process.env.MONGODB_URI ||
