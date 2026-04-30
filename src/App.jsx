@@ -13,6 +13,7 @@ import Student from "./components/Student";
 import Login from "./components/login";
 import List from "./components/List";
 import Profile from "./components/Profile";
+import VideoRoom from "./components/VideoRoom";
 
 const ProtectedRoute = ({ children, allowedRole }) => {
   const userName = sessionStorage.getItem("userName");
@@ -68,6 +69,14 @@ function App() {
           element={
             <ProtectedRoute allowedRole="recruiter">
               <Recruiter />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/meeting/:roomId"
+          element={
+            <ProtectedRoute>
+              <VideoRoom />
             </ProtectedRoute>
           }
         />

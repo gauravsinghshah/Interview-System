@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import StudentNav from "./StudentNav";
+import { API_URL } from "../config";
 
 const Profile = () => {
   const [profile, setProfile] = useState({
@@ -13,7 +14,7 @@ const Profile = () => {
 
   useEffect(() => {
     const token = sessionStorage.getItem("token");
-    fetch("http://localhost:5000/api/users/profile", {
+    fetch(`${API_URL}/api/users/profile`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -35,7 +36,7 @@ const Profile = () => {
     const token = sessionStorage.getItem("token");
     
     try {
-      const response = await fetch("http://localhost:5000/api/users/profile", {
+      const response = await fetch(`${API_URL}/api/users/profile`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

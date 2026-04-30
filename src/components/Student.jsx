@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Box from "./Box";
 import Card from "./Cards";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, Video, Clock } from "lucide-react";
 import StudentNav from "./StudentNav";
+import { useNavigate } from "react-router-dom";
+import { API_URL } from "../config";
 
 const Student = () => {
+  const navigate = useNavigate();
   const [userName, setUserName] = useState("Alex");
   const [invitations, setInvitations] = useState([]);
   const [interviews, setInterviews] = useState([]);
@@ -28,10 +31,10 @@ const Student = () => {
     const token = sessionStorage.getItem("token");
 
     Promise.all([
-      fetch("http://localhost:5000/api/jobs", {
+      fetch(`${API_URL}/api/jobs`, {
         headers: { Authorization: `Bearer ${token}` },
       }).then((res) => res.json()),
-      fetch("http://localhost:5000/api/applications/student/me", {
+      fetch(`${API_URL}/api/applications/student/me`, {
         headers: { Authorization: `Bearer ${token}` },
       }).then((res) => res.json()),
     ])
@@ -48,7 +51,7 @@ const Student = () => {
       })
       .catch((err) => console.error("Error fetching jobs/apps:", err));
 
-    fetch("http://localhost:5000/api/interviews", {
+    fetch(`${API_URL}/api/interviews`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -85,7 +88,7 @@ const Student = () => {
         payload.githubUrl = customApplyData.githubUrl;
       }
 
-      const response = await fetch("http://localhost:5000/api/applications", {
+      const response = await fetch(`${API_URL}/api/applications`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -123,7 +126,7 @@ const Student = () => {
     try {
       const token = sessionStorage.getItem("token");
       const response = await fetch(
-        `http://localhost:5000/api/applications/${applicationId}`,
+        `${API_URL}/api/applications/${applicationId}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
@@ -473,33 +476,45 @@ const Student = () => {
                   No upcoming interviews.
                 </p>
               ) : (
-                interviews.map((interview, index) => (
-                  <div
-                    key={index}
-                    className="border-2 border-black bg-white p-6 transition-all hover:translate-x-1 hover:translate-y-1"
-                  >
-                    <div className="mb-2 text-xl font-black uppercase">
-                      {interview.jobId?.role || "Role"}
-                    </div>
-                    <div className="mb-4 text-sm font-bold text-gray-600">
-                      {interview.jobId?.companyName || "Company"}
-                    </div>
-                    <div className="mb-1 font-mono text-sm font-bold">
-                      Date: {interview.date}
-                    </div>
-                    <div className="mb-4 font-mono text-sm font-bold">
-                      Time: {interview.time}
-                    </div>
-                    <a
-                      href={interview.link}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="block border-2 border-black bg-[#1800ff] py-2 text-center font-bold text-white uppercase transition-colors hover:bg-black"
+                interviews.map((interview, index) => {
+                  const scheduledTime = interview.scheduledAt ? new Date(interview.scheduledAt) : null;
+                  const now = new Date();
+                  const isReady = scheduledTime ? now >= scheduledTime : true;
+
+                  return (
+                    <div
+                      key={index}
+                      className="border-2 border-black bg-white p-6 transition-all hover:translate-x-1 hover:translate-y-1"
                     >
-                      Join Meeting
-                    </a>
-                  </div>
-                ))
+                      <div className="mb-2 text-xl font-black uppercase">
+                        {interview.jobId?.role || "Role"}
+                      </div>
+                      <div className="mb-4 text-sm font-bold text-gray-600">
+                        {interview.jobId?.companyName || "Company"}
+                      </div>
+                      <div className="mb-1 font-mono text-sm font-bold">
+                        Date: {interview.date}
+                      </div>
+                      <div className="mb-4 font-mono text-sm font-bold">
+                        Time: {interview.time}
+                      </div>
+                      {isReady ? (
+                        <button
+                          onClick={() => navigate(`/meeting/${interview.roomId}`)}
+                          className="block w-full cursor-pointer border-2 border-black bg-[#1800ff] py-2 text-center font-bold text-white uppercase transition-colors hover:bg-black"
+                        >
+                          <Video size={16} className="mr-1 inline" />
+                          Join Meeting
+                        </button>
+                      ) : (
+                        <div className="border-2 border-dashed border-gray-400 bg-[#f2efe9] py-2 text-center font-mono text-sm font-bold text-gray-500 uppercase">
+                          <Clock size={14} className="mr-1 inline" />
+                          Starts at {interview.time} on {interview.date}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })
               )}
             </div>
           </div>

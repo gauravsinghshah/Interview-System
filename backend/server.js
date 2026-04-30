@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const http = require("http");
+const { Server } = require("socket.io");
+const { v4: uuidv4 } = require("uuid");
 require("dotenv").config();
 
 const User = require("./models/User");
@@ -12,20 +15,31 @@ const Interview = require("./models/Interview");
 const { auth, isRecruiter } = require("./middleware/auth");
 
 const app = express();
+const server = http.createServer(app);
+
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 
-app.use(express.json());
-app.use(cors());
+const io = new Server(server, {
+  cors: {
+    origin: FRONTEND_URL,
+    methods: ["GET", "POST"],
+  },
+});
 
-const dbUser = process.env.DB_USERNAME;
-const dbPass = process.env.DB_PASSWORD;
+app.use(express.json());
+app.use(cors({ origin: FRONTEND_URL }));
+
+const MONGODB_URI =
+  process.env.MONGODB_URI ||
+  `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@interview-system-db.wlkjqix.mongodb.net/interview-system-db?appName=Interview-system-db`;
 
 mongoose
-  .connect(
-    `mongodb+srv://${dbUser}:${dbPass}@interview-system-db.wlkjqix.mongodb.net/interview-system-db?appName=Interview-system-db`,
-  )
+  .connect(MONGODB_URI)
   .then(() => console.log("Connected to MongoDB Atlas"))
   .catch((err) => console.error("MongoDB connection error:", err));
+
+// ─── Jobs ────────────────────────────────────────────────────────────────────
 
 app.post("/api/jobs", auth, isRecruiter, async (req, res) => {
   try {
@@ -55,6 +69,8 @@ app.get("/api/jobs", auth, async (req, res) => {
     return res.status(500).json({ error: "Failed to fetch jobs" });
   }
 });
+
+// ─── Applications ────────────────────────────────────────────────────────────
 
 app.post("/api/applications", auth, async (req, res) => {
   try {
@@ -134,16 +150,26 @@ app.get("/api/applications/:jobId", auth, isRecruiter, async (req, res) => {
   }
 });
 
+// ─── Interviews ──────────────────────────────────────────────────────────────
+
 app.post("/api/interviews", auth, isRecruiter, async (req, res) => {
   try {
-    const { jobId, studentId, date, time, link } = req.body;
+    const { jobId, studentId, date, time } = req.body;
+
+    // Generate unique room ID
+    const roomId = uuidv4();
+
+    // Build scheduledAt Date from date (YYYY-MM-DD) and time (HH:mm)
+    const scheduledAt = new Date(`${date}T${time}:00`);
+
     const newInterview = new Interview({
       jobId,
       studentId,
       recruiterId: req.user.userId,
       date,
       time,
-      link,
+      roomId,
+      scheduledAt,
     });
     await newInterview.save();
 
@@ -176,6 +202,53 @@ app.get("/api/interviews", auth, async (req, res) => {
   }
 });
 
+// ─── Time-Gated Join Endpoint ────────────────────────────────────────────────
+
+app.get("/api/interviews/:roomId/join", auth, async (req, res) => {
+  try {
+    const interview = await Interview.findOne({ roomId: req.params.roomId })
+      .populate("jobId", "role companyName")
+      .populate("studentId", "name")
+      .populate("recruiterId", "name");
+
+    if (!interview) {
+      return res.status(404).json({ error: "Meeting not found" });
+    }
+
+    // Verify the user is a participant
+    const userId = req.user.userId;
+    const isParticipant =
+      interview.studentId._id.toString() === userId ||
+      interview.recruiterId._id.toString() === userId;
+
+    if (!isParticipant) {
+      return res.status(403).json({ error: "You are not a participant of this meeting" });
+    }
+
+    // Recruiters can always join (they created the meeting)
+    if (req.user.role === "recruiter") {
+      return res.status(200).json({ interview, canJoin: true });
+    }
+
+    // Students: enforce time-gate
+    const now = new Date();
+    if (now < interview.scheduledAt) {
+      return res.status(403).json({
+        error: "Interview hasn't started yet",
+        scheduledAt: interview.scheduledAt,
+        canJoin: false,
+      });
+    }
+
+    return res.status(200).json({ interview, canJoin: true });
+  } catch (error) {
+    console.error("Join meeting error:", error);
+    return res.status(500).json({ error: "Failed to join meeting" });
+  }
+});
+
+// ─── User Profile ────────────────────────────────────────────────────────────
+
 app.get("/api/users/profile", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.userId).select("-password");
@@ -198,6 +271,8 @@ app.put("/api/users/profile", auth, async (req, res) => {
     return res.status(500).json({ error: "Failed to update profile" });
   }
 });
+
+// ─── Auth ────────────────────────────────────────────────────────────────────
 
 app.post("/api/auth/signup", async (req, res) => {
   try {
@@ -278,7 +353,42 @@ app.post("/api/auth/login", async (req, res) => {
   }
 });
 
-const PORT = 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+// ─── Socket.IO Signaling Server ──────────────────────────────────────────────
+
+io.on("connection", (socket) => {
+  console.log(`Socket connected: ${socket.id}`);
+
+  socket.on("join-room", (roomId) => {
+    socket.join(roomId);
+    socket.roomId = roomId;
+    // Notify others in the room that a new peer joined
+    socket.to(roomId).emit("peer-joined", { peerId: socket.id });
+    console.log(`${socket.id} joined room ${roomId}`);
+  });
+
+  socket.on("offer", ({ roomId, offer }) => {
+    socket.to(roomId).emit("offer", { offer, peerId: socket.id });
+  });
+
+  socket.on("answer", ({ roomId, answer }) => {
+    socket.to(roomId).emit("answer", { answer, peerId: socket.id });
+  });
+
+  socket.on("ice-candidate", ({ roomId, candidate }) => {
+    socket.to(roomId).emit("ice-candidate", { candidate, peerId: socket.id });
+  });
+
+  socket.on("disconnect", () => {
+    if (socket.roomId) {
+      socket.to(socket.roomId).emit("peer-left", { peerId: socket.id });
+      console.log(`${socket.id} left room ${socket.roomId}`);
+    }
+  });
+});
+
+// ─── Start Server ────────────────────────────────────────────────────────────
+
+const PORT = process.env.PORT || 5000;
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

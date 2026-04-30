@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Plus, ArrowRight, Briefcase } from "lucide-react";
+import { Plus, ArrowRight, Briefcase, Copy, Check, Video } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import RecruiterNav from "./RecruiterNav";
+import { API_URL } from "../config";
 
 const mockCandidates = [
   {
@@ -38,6 +40,7 @@ const mockCandidates = [
 ];
 
 const Recruiter = () => {
+  const navigate = useNavigate();
   const [activeJobId, setActiveJobId] = useState(null);
   const [applicants, setApplicants] = useState([]);
   const [userName, setUserName] = useState("Recruiter");
@@ -50,8 +53,10 @@ const Recruiter = () => {
   const [interviewDetails, setInterviewDetails] = useState({
     date: "",
     time: "",
-    link: "",
   });
+  const [scheduledLink, setScheduledLink] = useState(null);
+  const [linkCopied, setLinkCopied] = useState(false);
+  const [myInterviews, setMyInterviews] = useState([]);
   const [isPostingModalOpen, setIsPostingModalOpen] = useState(false);
   const [newJobData, setNewJobData] = useState({
     role: "",
@@ -69,7 +74,7 @@ const Recruiter = () => {
       setUserName(name);
     }
     const token = sessionStorage.getItem("token");
-    fetch(`http://localhost:5000/api/jobs?me=true`, {
+    fetch(`${API_URL}/api/jobs?me=true`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -80,12 +85,19 @@ const Recruiter = () => {
         }
       })
       .catch((err) => console.error("Error fetching jobs:", err));
+
+    fetch(`${API_URL}/api/interviews`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => setMyInterviews(Array.isArray(data) ? data : []))
+      .catch((err) => console.error("Error fetching interviews:", err));
   }, []);
 
   useEffect(() => {
     if (!activeJobId) return;
     const token = sessionStorage.getItem("token");
-    fetch(`http://localhost:5000/api/applications/${activeJobId}`, {
+    fetch(`${API_URL}/api/applications/${activeJobId}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -96,7 +108,7 @@ const Recruiter = () => {
     e.preventDefault();
     try {
       const token = sessionStorage.getItem("token");
-      const response = await fetch("http://localhost:5000/api/jobs", {
+      const response = await fetch(`${API_URL}/api/jobs`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -135,7 +147,7 @@ const Recruiter = () => {
     e.preventDefault();
     try {
       const token = sessionStorage.getItem("token");
-      const response = await fetch("http://localhost:5000/api/interviews", {
+      const response = await fetch(`${API_URL}/api/interviews`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -144,12 +156,14 @@ const Recruiter = () => {
         body: JSON.stringify({
           jobId: activeJobId,
           studentId: selectedApplication.studentId._id,
-          ...interviewDetails,
+          date: interviewDetails.date,
+          time: interviewDetails.time,
         }),
       });
       if (response.ok) {
-        alert("Interview Scheduled!");
-        setScheduleModalOpen(false);
+        const data = await response.json();
+        const meetingUrl = `${window.location.origin}/meeting/${data.roomId}`;
+        setScheduledLink(meetingUrl);
         setApplicants(
           applicants.map((app) =>
             app._id === selectedApplication._id
@@ -157,12 +171,19 @@ const Recruiter = () => {
               : app,
           ),
         );
+        setMyInterviews([data, ...myInterviews]);
       } else {
         alert("Failed to schedule interview");
       }
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const handleCopyLink = (link) => {
+    navigator.clipboard.writeText(link);
+    setLinkCopied(true);
+    setTimeout(() => setLinkCopied(false), 2000);
   };
 
   const activeJobData = jobs.find((j) => j._id === activeJobId);
@@ -287,77 +308,53 @@ const Recruiter = () => {
       {scheduleModalOpen && (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
           <div className="w-full max-w-md border-2 border-black bg-white p-8">
-            <h2 className="mb-6 text-2xl font-black uppercase">
-              Schedule Interview
-            </h2>
-            <form
-              onSubmit={handleScheduleSubmit}
-              className="space-y-4 font-bold"
-            >
+            {scheduledLink ? (
               <div>
-                <label className="mb-1 block text-sm uppercase">Date</label>
-                <input
-                  required
-                  type="date"
-                  value={interviewDetails.date}
-                  onChange={(e) =>
-                    setInterviewDetails({
-                      ...interviewDetails,
-                      date: e.target.value,
-                    })
-                  }
-                  className="w-full border-2 border-black px-4 py-3 transition-all hover:translate-x-1 hover:translate-y-1"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm uppercase">Time</label>
-                <input
-                  required
-                  type="time"
-                  value={interviewDetails.time}
-                  onChange={(e) =>
-                    setInterviewDetails({
-                      ...interviewDetails,
-                      time: e.target.value,
-                    })
-                  }
-                  className="w-full border-2 border-black px-4 py-3 transition-all hover:translate-x-1 hover:translate-y-1"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm uppercase">
-                  Meeting Link
-                </label>
-                <input
-                  required
-                  type="url"
-                  value={interviewDetails.link}
-                  onChange={(e) =>
-                    setInterviewDetails({
-                      ...interviewDetails,
-                      link: e.target.value,
-                    })
-                  }
-                  className="w-full border-2 border-black px-4 py-3 transition-all hover:translate-x-1 hover:translate-y-1"
-                  placeholder="https://zoom.us/j/..."
-                />
-              </div>
-              <div className="mt-8 flex justify-end gap-4 border-t-2 border-black pt-6">
+                <h2 className="mb-6 text-2xl font-black uppercase">Interview Scheduled!</h2>
+                <p className="mb-2 text-sm font-bold text-gray-500 uppercase">Meeting Link (auto-generated)</p>
+                <div className="mb-4 flex items-center gap-2 border-2 border-black bg-[#f2efe9] p-3">
+                  <p className="flex-1 truncate font-mono text-sm font-bold">{scheduledLink}</p>
+                  <button
+                    onClick={() => handleCopyLink(scheduledLink)}
+                    className="cursor-pointer border-2 border-black bg-[#1800ff] px-3 py-1 text-white transition-colors hover:bg-black"
+                  >
+                    {linkCopied ? <Check size={16} /> : <Copy size={16} />}
+                  </button>
+                </div>
+                <p className="mb-6 font-mono text-xs text-gray-500">Share this link with the candidate. They can only join at the scheduled time.</p>
                 <button
-                  type="button"
-                  onClick={() => setScheduleModalOpen(false)}
-                  className="text-gray-500 uppercase hover:text-black"
+                  onClick={() => { setScheduleModalOpen(false); setScheduledLink(null); setInterviewDetails({ date: "", time: "" }); }}
+                  className="w-full cursor-pointer border-2 border-black bg-black px-6 py-3 font-bold text-white uppercase transition-colors hover:bg-[#1800ff]"
                 >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="border-2 border-black bg-[#1800ff] px-6 py-2 font-black text-white uppercase"
-                >
-                  Schedule
+                  Done
                 </button>
               </div>
-            </form>
+            ) : (
+              <>
+                <h2 className="mb-6 text-2xl font-black uppercase">Schedule Interview</h2>
+                <form onSubmit={handleScheduleSubmit} className="space-y-4 font-bold">
+                  <div>
+                    <label className="mb-1 block text-sm uppercase">Date</label>
+                    <input required type="date" value={interviewDetails.date}
+                      onChange={(e) => setInterviewDetails({ ...interviewDetails, date: e.target.value })}
+                      className="w-full border-2 border-black px-4 py-3 transition-all hover:translate-x-1 hover:translate-y-1" />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm uppercase">Time</label>
+                    <input required type="time" value={interviewDetails.time}
+                      onChange={(e) => setInterviewDetails({ ...interviewDetails, time: e.target.value })}
+                      className="w-full border-2 border-black px-4 py-3 transition-all hover:translate-x-1 hover:translate-y-1" />
+                  </div>
+                  <div className="border-2 border-dashed border-gray-400 bg-[#f2efe9] p-3">
+                    <p className="font-mono text-xs font-bold text-gray-500"><Video size={14} className="mr-1 inline" />A meeting link will be auto-generated. No Zoom needed.</p>
+                  </div>
+                  <div className="mt-8 flex justify-end gap-4 border-t-2 border-black pt-6">
+                    <button type="button" onClick={() => setScheduleModalOpen(false)} className="cursor-pointer text-gray-500 uppercase hover:text-black">Cancel</button>
+                    <button type="submit" className="cursor-pointer border-2 border-black bg-[#1800ff] px-6 py-2 font-black text-white uppercase">Schedule</button>
+                  </div>
+                </form>
+              </>
+            )}
           </div>
         </div>
       )}
@@ -560,6 +557,35 @@ const Recruiter = () => {
                   >
                     {job._id === activeJobId ? applicants.length : "?"}{" "}
                     Candidates
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* My Interviews Section */}
+        <div className="mt-20">
+          <h2 className="mb-8 border-b-2 border-black pb-4 text-3xl font-black tracking-tight uppercase md:text-4xl">Scheduled Interviews</h2>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {myInterviews.length === 0 ? (
+              <p className="col-span-full font-bold tracking-widest text-gray-500 uppercase">No interviews scheduled yet.</p>
+            ) : (
+              myInterviews.map((interview) => (
+                <div key={interview._id} className="border-2 border-black bg-white p-6 transition-all hover:translate-x-1 hover:translate-y-1">
+                  <div className="mb-2 text-xl font-black uppercase">{interview.jobId?.role || "Role"}</div>
+                  <div className="mb-1 font-mono text-sm font-bold text-gray-500">Candidate: {interview.studentId?.name || "Student"}</div>
+                  <div className="mb-1 font-mono text-sm font-bold">Date: {interview.date}</div>
+                  <div className="mb-4 font-mono text-sm font-bold">Time: {interview.time}</div>
+                  <div className="flex gap-2">
+                    <button onClick={() => navigate(`/meeting/${interview.roomId}`)}
+                      className="flex-1 cursor-pointer border-2 border-black bg-[#1800ff] py-2 text-center font-bold text-white uppercase transition-colors hover:bg-black">
+                      <Video size={16} className="mr-1 inline" />Join Call
+                    </button>
+                    <button onClick={() => handleCopyLink(`${window.location.origin}/meeting/${interview.roomId}`)}
+                      className="cursor-pointer border-2 border-black px-3 py-2 font-bold uppercase transition-colors hover:bg-gray-100">
+                      <Copy size={16} />
+                    </button>
                   </div>
                 </div>
               ))
