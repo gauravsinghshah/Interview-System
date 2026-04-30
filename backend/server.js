@@ -40,6 +40,21 @@ mongoose
   .then(() => console.log("Connected to MongoDB Atlas"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
+// ─── Health Check ─────────────────────────────────────────────────────────────
+
+app.get("/", (req, res) => {
+  res.json({
+    status: "✅ Interview System API is running",
+    version: "1.0.0",
+    endpoints: {
+      auth: "/api/auth/login | /api/auth/signup",
+      jobs: "/api/jobs",
+      applications: "/api/applications",
+      interviews: "/api/interviews",
+    },
+  });
+});
+
 // ─── Jobs ────────────────────────────────────────────────────────────────────
 
 app.post("/api/jobs", auth, isRecruiter, async (req, res) => {
