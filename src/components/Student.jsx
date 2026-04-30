@@ -476,12 +476,7 @@ const Student = () => {
                   No upcoming interviews.
                 </p>
               ) : (
-                interviews.map((interview, index) => {
-                  const scheduledTime = interview.scheduledAt ? new Date(interview.scheduledAt) : null;
-                  const now = new Date();
-                  const isReady = scheduledTime ? now >= scheduledTime : true;
-
-                  return (
+                interviews.map((interview, index) => (
                     <div
                       key={index}
                       className="border-2 border-black bg-white p-6 transition-all hover:translate-x-1 hover:translate-y-1"
@@ -498,23 +493,15 @@ const Student = () => {
                       <div className="mb-4 font-mono text-sm font-bold">
                         Time: {interview.time}
                       </div>
-                      {isReady ? (
-                        <button
-                          onClick={() => navigate(`/meeting/${interview.roomId}`)}
-                          className="block w-full cursor-pointer border-2 border-black bg-[#1800ff] py-2 text-center font-bold text-white uppercase transition-colors hover:bg-black"
-                        >
-                          <Video size={16} className="mr-1 inline" />
-                          Join Meeting
-                        </button>
-                      ) : (
-                        <div className="border-2 border-dashed border-gray-400 bg-[#f2efe9] py-2 text-center font-mono text-sm font-bold text-gray-500 uppercase">
-                          <Clock size={14} className="mr-1 inline" />
-                          Starts at {interview.time} on {interview.date}
-                        </div>
-                      )}
+                      <button
+                        onClick={() => navigate(`/meeting/${interview.roomId}`)}
+                        className="block w-full cursor-pointer border-2 border-black bg-[#1800ff] py-2 text-center font-bold text-white uppercase transition-colors hover:bg-black"
+                      >
+                        <Video size={16} className="mr-1 inline" />
+                        Join Meeting
+                      </button>
                     </div>
-                  );
-                })
+                ))
               )}
             </div>
           </div>

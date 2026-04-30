@@ -241,21 +241,6 @@ app.get("/api/interviews/:roomId/join", auth, async (req, res) => {
       return res.status(403).json({ error: "You are not a participant of this meeting" });
     }
 
-    // Recruiters can always join (they created the meeting)
-    if (req.user.role === "recruiter") {
-      return res.status(200).json({ interview, canJoin: true });
-    }
-
-    // Students: enforce time-gate
-    const now = new Date();
-    if (now < interview.scheduledAt) {
-      return res.status(403).json({
-        error: "Interview hasn't started yet",
-        scheduledAt: interview.scheduledAt,
-        canJoin: false,
-      });
-    }
-
     return res.status(200).json({ interview, canJoin: true });
   } catch (error) {
     console.error("Join meeting error:", error);
