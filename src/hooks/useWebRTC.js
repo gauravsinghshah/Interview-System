@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { io } from "socket.io-client";
+import { API_URL } from "../config";
 
 const ICE_SERVERS = {
   iceServers: [
@@ -9,7 +10,7 @@ const ICE_SERVERS = {
   ],
 };
 
-const SOCKET_URL = import.meta.env.VITE_API_URL;
+const SOCKET_URL = API_URL;
 
 export function useWebRTC() {
   const [connectionState, setConnectionState] = useState("idle"); // idle | connecting | waiting | connected | ended

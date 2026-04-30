@@ -14,6 +14,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useWebRTC } from "../hooks/useWebRTC";
+import { API_URL } from "../config";
 
 const VideoRoom = () => {
   const { roomId } = useParams();
@@ -53,7 +54,7 @@ const VideoRoom = () => {
         }
 
         const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/interviews/${roomId}/join`,
+          `${API_URL}/api/interviews/${roomId}/join`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
