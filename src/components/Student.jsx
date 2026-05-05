@@ -24,11 +24,11 @@ const Student = () => {
     githubUrl: "",
   });
   useEffect(() => {
-    const storedName = sessionStorage.getItem("userName");
+    const storedName = localStorage.getItem("userName");
     if (storedName) {
       setUserName(storedName.split(" ")[0]);
     }
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
     Promise.all([
       fetch(`${API_URL}/api/jobs`, {
@@ -75,7 +75,7 @@ const Student = () => {
   const handleApplySubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = sessionStorage.getItem("token");
+      const token = localStorage.getItem("token");
       const payload = { jobId: jobToApply };
       if (applyOption === "custom") {
         payload.applicationSkills = customApplyData.skills
@@ -124,7 +124,7 @@ const Student = () => {
     if (!window.confirm("Are you sure you want to revoke this application?"))
       return;
     try {
-      const token = sessionStorage.getItem("token");
+      const token = localStorage.getItem("token");
       const response = await fetch(
         `${API_URL}/api/applications/${applicationId}`,
         {

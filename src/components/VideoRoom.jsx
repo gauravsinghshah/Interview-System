@@ -47,7 +47,7 @@ const VideoRoom = () => {
   useEffect(() => {
     const checkAccess = async () => {
       try {
-        const token = sessionStorage.getItem("token");
+        const token = localStorage.getItem("token");
         if (!token) {
           navigate("/login");
           return;
@@ -149,7 +149,7 @@ const VideoRoom = () => {
 
   const handleEndCall = useCallback(() => {
     disconnect();
-    const role = sessionStorage.getItem("userRole");
+    const role = localStorage.getItem("userRole");
     navigate(role === "recruiter" ? "/recruiter" : "/student");
   }, [disconnect, navigate]);
 

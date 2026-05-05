@@ -68,12 +68,12 @@ const Recruiter = () => {
   const [jobs, setJobs] = useState([]);
   useEffect(() => {
     let name = "Recruiter";
-    const storedName = sessionStorage.getItem("userName");
+    const storedName = localStorage.getItem("userName");
     if (storedName) {
       name = storedName.split(" ")[0];
       setUserName(name);
     }
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     fetch(`${API_URL}/api/jobs?me=true`, {
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -96,7 +96,7 @@ const Recruiter = () => {
 
   useEffect(() => {
     if (!activeJobId) return;
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     fetch(`${API_URL}/api/applications/${activeJobId}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -107,7 +107,7 @@ const Recruiter = () => {
   const handleJobSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = sessionStorage.getItem("token");
+      const token = localStorage.getItem("token");
       const response = await fetch(`${API_URL}/api/jobs`, {
         method: "POST",
         headers: {
@@ -146,7 +146,7 @@ const Recruiter = () => {
   const handleScheduleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = sessionStorage.getItem("token");
+      const token = localStorage.getItem("token");
       const response = await fetch(`${API_URL}/api/interviews`, {
         method: "POST",
         headers: {

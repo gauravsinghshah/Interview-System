@@ -65,9 +65,9 @@ const Login = () => {
         throw new Error(data.error || "Authentication failed");
       }
 
-      sessionStorage.setItem("userName", data.name);
-      sessionStorage.setItem("userRole", data.role);
-      sessionStorage.setItem("token", data.token);
+      localStorage.setItem("userName", data.name);
+      localStorage.setItem("userRole", data.role);
+      localStorage.setItem("token", data.token);
       navigate(data.role === "student" ? "/student" : "/recruiter");
     } catch (error) {
       setErrorMsg(error.message || "Unable to sign in right now");

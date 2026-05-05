@@ -17,7 +17,7 @@ const StudentNav = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link to="/login">
+          <Link to="/login" onClick={() => localStorage.clear()}>
             <button className="cursor-pointer bg-blue-600 px-4 py-2 text-[10px] font-bold tracking-widest text-white uppercase transition-colors hover:bg-blue-700 md:px-6 md:py-3 md:text-xs">
               LOG OUT
             </button>

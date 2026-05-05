@@ -13,7 +13,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     fetch(`${API_URL}/api/users/profile`, {
       headers: { Authorization: `Bearer ${token}` }
     })
@@ -33,7 +33,7 @@ const Profile = () => {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     
     try {
       const response = await fetch(`${API_URL}/api/users/profile`, {

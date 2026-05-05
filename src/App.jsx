@@ -16,8 +16,8 @@ import Profile from "./components/Profile";
 import VideoRoom from "./components/VideoRoom";
 
 const ProtectedRoute = ({ children, allowedRole }) => {
-  const userName = sessionStorage.getItem("userName");
-  const userRole = sessionStorage.getItem("userRole");
+  const userName = localStorage.getItem("userName");
+  const userRole = localStorage.getItem("userRole");
 
   if (!userName || !userRole) {
     return <Navigate to="/login" replace />;
