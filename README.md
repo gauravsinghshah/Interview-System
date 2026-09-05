@@ -4,7 +4,7 @@ An end-to-end recruitment and interview management platform designed to connect 
 
 ## Description
 
-The Interview System is built to streamline the recruitment process. It features distinct dashboard designs for both recruiters and students, utilizing real-time communications, secure authentication, and a scalable data model.
+The Interview System is built to streamline the recruitment process. It features distinct dashboard designs for both recruiters and students, utilizing real-time communications, secure authentication, and a scalable data-model.
 
 ## Architecture & Technologies Used
 
